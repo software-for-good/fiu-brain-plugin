@@ -3,4 +3,8 @@ description: Founders only. Work through the FIU Brain proposal backlog in one c
 disable-model-invocation: true
 ---
 
-Call the FIU Brain MCP tool `get_skill` with the argument `name: "process-proposals"` and follow the instructions it returns, exactly and completely. The server refuses this for accounts that are not founders; if it does, tell the user and stop.
+1. Call `whoami`; if `can_approve` is false, tell the user this is founders only and stop.
+2. Call `search` with `statuses: ["proposal"]` and list the open proposals, sorted by how certain they read.
+3. The approve and decline tools arrive in increment two; until then, stop after the list.
+
+This is a short stub; the full skill follows.

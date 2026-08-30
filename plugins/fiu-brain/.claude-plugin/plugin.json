@@ -1,6 +1,8 @@
 {
   "name": "fiu-brain",
-  "description": "Thin commands for the FIU Brain. Every command fetches its instructions from the FIU Brain MCP server, so the plugin never needs updating.",
-  "version": "1.0.0",
-  "author": { "name": "Food Influencers United" }
+  "description": "The FIU Brain skills: start, stop, process-proposals and the extraction rules. Updated through this repository; clients sync it.",
+  "version": "1.0.1",
+  "author": {
+    "name": "Food Influencers United"
+  }
 }

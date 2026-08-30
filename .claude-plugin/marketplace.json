@@ -1,6 +1,6 @@
 {
   "name": "fiu-brain",
-  "description": "Thin commands for the FIU Brain; instructions are fetched from the FIU Brain MCP server.",
+  "description": "The skills of the FIU Brain, kept in sync by Cowork and Claude Code.",
   "owner": {
     "name": "Food Influencers United"
   },
@@ -8,8 +8,8 @@
     {
       "name": "fiu-brain",
       "source": "./plugins/fiu-brain",
-      "description": "Slash commands for the FIU Brain: start, stop, process-proposals. The commands only ask the FIU Brain MCP server for the current instructions.",
-      "version": "1.0.0"
+      "description": "The FIU Brain skills: start, stop, process-proposals and the extraction rules.",
+      "version": "1.0.1"
     }
   ]
 }

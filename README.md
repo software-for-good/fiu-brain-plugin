@@ -1,24 +1,13 @@
-# FIU Brain plugin marketplace
+# FIU Brain plugin
 
-One plugin, three commands, no code: `/fiu-brain:start`, `/fiu-brain:stop`, `/fiu-brain:process-proposals`.
-Each command asks the FIU Brain MCP server for its current instructions (`get_skill`) and follows them,
-so the instructions are maintained in one place (the API repository) and this plugin never needs an update.
+The skills of the FIU Brain: `/fiu-brain:start`, `/fiu-brain:stop`, `/fiu-brain:process-proposals`, and the
+`extraction-rules` every extracting path follows. This repository is the single place they live; a merged
+pull request reaches every session because both clients keep the plugin in sync:
 
-The plugin contains no hooks, no executables, no agents and no MCP server configuration; it can do nothing
-without the FIU Brain connector the person already has.
+- Cowork: Plugins → Add marketplace → `software-for-good/fiu-brain-plugin`, install `fiu-brain`, turn auto-sync on.
+- Claude Code: `/plugin marketplace add software-for-good/fiu-brain-plugin`, `/plugin install fiu-brain@fiu-brain`,
+  then enable auto-update for the marketplace under `/plugin` → Marketplaces.
 
-## Install
-
-Claude Code:
-
-    /plugin marketplace add software-for-good/fiu-brain-plugin
-    /plugin install fiu-brain@fiu-brain
-
-Cowork: Plugins, upload this repository's `plugins/fiu-brain` folder (or the marketplace once private
-marketplaces are supported in Cowork).
-
-## Connector
-
-The commands need the FIU Brain connector: Claude Code `claude mcp add --transport http fiu-brain
-https://<api-host>/mcp/brain --header "Authorization: Bearer <your token>"`; Cowork and claude.ai: add a
-custom connector with the same URL and the same header. Tokens come from `php artisan brain:token`.
+The plugin contains no hooks, executables, agents or MCP server configuration; the skills only call the
+FIU Brain connector the person already has (a custom connector or `claude mcp add` with a personal bearer
+token from `php artisan brain:token`). Nothing sensitive is stored here.

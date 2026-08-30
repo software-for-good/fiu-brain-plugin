@@ -3,8 +3,10 @@ description: Start an FIU Brain session. Run this at the beginning of every sess
 disable-model-invocation: true
 ---
 
-Call the FIU Brain MCP tool `get_skill` with the argument `name: "start"` and follow the instructions it returns, exactly and completely.
+1. Call `whoami` on the FIU Brain connector. If it is not available, tell the user the FIU Brain connector is not connected and stop.
+2. Establish the goal of the session: use `$ARGUMENTS` if given, otherwise ask one short question (goal, audience, perspective; multiple choice where possible). Do not fill in the goal yourself.
+3. Call `context_pack` with the goal and any labels you can derive from it (client/…, person/…, theme/…).
+4. Read the pack: agreed atoms are company truth, observed atoms are facts about the named entities, proposals are unconfirmed. Tell the user how fresh the brain is (from the status in the pack).
+5. Work. Cite atoms by filename when you use them, and say so when the brain has nothing on a topic.
 
-The goal of this session, if the user gave one: $ARGUMENTS
-
-If the `get_skill` tool is not available, the FIU Brain connector is not connected. Say so, point the user to the FIU Brain setup notes, and stop.
+This is a short stub; the full skill follows.
