@@ -1,0 +1,6 @@
+{
+  "name": "fiu-brain",
+  "description": "Thin commands for the FIU Brain. Every command fetches its instructions from the FIU Brain MCP server, so the plugin never needs updating.",
+  "version": "1.0.0",
+  "author": { "name": "Food Influencers United" }
+}
