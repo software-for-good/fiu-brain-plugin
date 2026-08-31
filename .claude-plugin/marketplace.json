@@ -8,8 +8,8 @@
     {
       "name": "fiu-brain",
       "source": "./plugins/fiu-brain",
-      "description": "The FIU Brain skills: start, stop, process-proposals and the extraction rules.",
-      "version": "1.0.1"
+      "description": "The FIU Brain skills: session start/stop, extraction rules, guardrails, the two sweeps and both processing loops.",
+      "version": "1.1.0"
     }
   ]
-}
+}\n
