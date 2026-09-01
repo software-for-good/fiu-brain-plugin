@@ -11,7 +11,15 @@ Needs a shell (Claude Code or Cowork). Without one, say so and point at the runb
 
 ## 1. Scope and export
 
-Confirm whose mailbox and which period (default: everything work-related, however old). The owner exports it themselves, which is what makes this opt-in: Google Takeout, mail only, optionally limited to a label they applied first. Takeout usually delivers several `.mbox` files (Inbox, Sent, per label); ask for all their paths, because a conversation lives half in Inbox and half in Sent and the split merges them into one thread.
+Confirm whose mailbox and which period (default: everything work-related, however old). The owner exports it themselves, which is what makes this opt-in. Walk them through it:
+
+1. Optional narrowing: in Gmail, apply a label (say `brain-sweep`) to what they are willing to share; exporting everything and filtering here works too.
+2. Go to takeout.google.com with the work account, choose "Deselect all", then tick only Mail.
+3. Click "All Mail data included": keep everything, or tick specific labels; always include both Inbox and Sent, because a conversation lives half in each and the split merges them into one thread.
+4. Next step: export once, `.zip`, 50GB size. Smaller sizes split the mailbox into numbered parts (`Inbox-001.mbox`, `Inbox-002.mbox`); parts are fine, keep them all.
+5. Google mails a download link (minutes for small boxes, hours for gigabytes). Download, extract; the `.mbox` files sit under `Takeout/Mail/`.
+
+Ask for the paths of all `.mbox` files, parts included; the split takes them in one run.
 
 ## 2. Split (script, no reading)
 
