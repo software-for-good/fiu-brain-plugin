@@ -33,7 +33,7 @@ If the session produced something that goes to a colleague or a client, apply th
 
 ## 5. The session as a source
 
-When a raw-submission tool is available on the connector, submit the session transcript as a raw first, so its id can go into the atoms' `sources`. Until that tool exists, skip this silently; the atoms stand on their own.
+Submit the session transcript with `submit_raw` first (title, the full transcript, the session's start time as `source_at`); it enters processed, since this session already extracted, and its id goes into every atom's `sources`. When the tool is not on the connector yet, skip this silently; the atoms stand on their own.
 
 ## 6. Submit
 
