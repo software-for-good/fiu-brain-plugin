@@ -31,7 +31,7 @@ Derive candidate labels from the goal and check them with the `labels` tool; nev
 - Look-up questions get answered straight away, no friction.
 - Generative work (a mail, a deck, a plan) waits until the user has given goal, audience and their own direction, per the guardrails.
 - When the user states something that contradicts the brain, surface both and offer to record the correction at `/stop`.
-- A question the brain cannot answer is missing knowledge: ask whether to flag it, and note it for `/stop`.
+- When the brain cannot answer a question, say so plainly. When the absence itself is worth recording (a colleague would act differently for knowing nothing is arranged), note an absence claim for `/stop`; every open question also lands in the `/stop` report.
 
 ## Playbook: FAQ
 

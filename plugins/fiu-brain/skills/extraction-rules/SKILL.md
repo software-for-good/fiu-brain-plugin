@@ -24,7 +24,7 @@ Make an atom for:
 - why something failed, stalled or succeeded
 - how FIU works: definitions, service descriptions, pricing rules, ways of working (these become proposals)
 - an agreed action item, as observed: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling still is not
-- a question the brain could not answer, flagged during a session, as a proposal whose title is the question itself, ending in a question mark (the one exception to the title shape)
+- an absence that matters: when a colleague would act differently for knowing something is not arranged, record the absence as a claim: "At the time of writing FIU has no pricing agreement with Jumbo." Date it in the body; the atom that arranges it later supersedes it
 
 Never make an atom for:
 
@@ -36,7 +36,7 @@ Never make an atom for:
 - the argument of an article or document you were handed; only a company-wide takeaway becomes a proposal
 - your own reasoning, or a summary of the session
 
-**Expected yield** (the anti-explosion dial): a mail thread gives 0 to 3 atoms, an hour of meeting 3 to 8, a working session 0 to 3. Zero is a normal outcome; say so and move on. Thirty atoms from one source means you are keeping material these rules say to skip. Every weak atom taxes every future session that has to scan past it.
+**Typical survivors of the bar** (calibration, never a target): a mail thread 0 to 3 atoms, an hour of meeting 3 to 8, a working session 0 to 3. Zero is a normal outcome; say so and move on. The number to distrust is the high one: thirty from one source means the bar slipped, and every weak atom taxes every future session that has to scan past it. A source that produced nothing produced nothing.
 
 When in doubt, leave it out. A missing atom costs one question later. A wrong atom gets repeated as truth.
 

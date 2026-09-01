@@ -15,7 +15,7 @@ Call `whoami`. If the connector is missing, say so and stop. If `can_write` is f
 
 Load `fiu-brain:extraction-rules` and apply it to everything learned in this session, including what the user told you, not only what you produced. Everything you write is English.
 
-Action items and missing-knowledge flags are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
+Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 
 ## 3. Show the harvest, then wait
 
@@ -41,4 +41,4 @@ Call `submit_atoms` with the confirmed batch, `sources` set when step 5 produced
 
 ## 7. Report
 
-Two lines: accepted, by filename; left out, and why. Then the verbatim list of corrections the user made.
+Accepted, by filename; left out, and why; the open questions this session could not answer, so the monthly raw review sees them. Then the verbatim list of corrections the user made.

@@ -9,7 +9,7 @@ Ingest put sources in; you put knowledge in. One source at a time, resume-safe.
 
 ## 1. Gate
 
-Call `whoami`. If the connector is missing, say so and stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. If the raw tools (`list_raws`, `get_raw`, `mark_raw_processed`) are not on the connector, the server side of processing has not shipped yet: say exactly that and stop.
+Call `whoami`. If the connector is missing, say so and stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. If the raw tools (`list_raws`, `mark_raw_processed`) are not on the connector, the server side of processing has not shipped yet: say exactly that and stop. Processing also needs a shell (Claude Code or Cowork) to fetch sources; without one, say so and stop.
 
 ## 2. Agree the scope
 
@@ -17,7 +17,7 @@ Ask two things in one message: which scope (oldest first, one person's sweep, on
 
 ## 3. Fetch and read, one source at a time
 
-`list_raws` for the scope, then per source `get_raw` by filename. Long sources come in parts; fetch the next part only when you need it, and never fetch more than one source ahead. Work in chronological order so a later source can supersede an earlier one. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
+`list_raws` for the scope. Fetch each source through the raw endpoint: curl `GET /brain/raws/{filename}` with the same bearer token the connector uses, into a local file. Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time, never ahead. Work in chronological order so a later source can supersede an earlier one. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
 
 If a source turns out personal or private: extract nothing, quote nothing, and report it at the end so Rob can remove it; that removal is a manual operation on purpose.
 
