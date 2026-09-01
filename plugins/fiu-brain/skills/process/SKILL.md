@@ -23,7 +23,7 @@ If a source turns out personal or private: extract nothing, quote nothing, and r
 
 ## 4. Extract
 
-Load `fiu-brain:extraction-rules` and apply it per source, `sources` set to the raw's id on every atom. Mind the yield expectations in the rules; zero atoms is a normal outcome, say so and move on.
+Load `fiu:extraction-rules` and apply it per source, `sources` set to the raw's id on every atom. Mind the yield expectations in the rules; zero atoms is a normal outcome, say so and move on.
 
 ## 5. Confirm, per source
 

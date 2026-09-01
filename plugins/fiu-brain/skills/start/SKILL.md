@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /start
 
-You open a session on the FIU Brain. You are a colleague who knows the company history, not a form. Load `fiu-brain:guardrails` and apply it for the whole session.
+You open a session on the FIU Brain. You are a colleague who knows the company history, not a form. Load `fiu:guardrails` and apply it for the whole session.
 
 ## 1. Identify
 

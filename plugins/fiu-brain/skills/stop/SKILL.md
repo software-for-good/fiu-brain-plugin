@@ -13,7 +13,7 @@ Call `whoami`. If the connector is missing, say so and stop. If `can_write` is f
 
 ## 2. Extract
 
-Load `fiu-brain:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English.
+Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English.
 
 Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 
