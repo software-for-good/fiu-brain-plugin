@@ -11,11 +11,11 @@ Needs a shell (Claude Code or Cowork). Without one, say so and point at the runb
 
 ## 1. Scope and export
 
-Confirm whose mailbox and which period (default: everything work-related, however old). The owner exports it themselves, which is what makes this opt-in: Google Takeout, mail only, optionally limited to a label they applied first. Ask for the path to the `.mbox` file.
+Confirm whose mailbox and which period (default: everything work-related, however old). The owner exports it themselves, which is what makes this opt-in: Google Takeout, mail only, optionally limited to a label they applied first. Takeout usually delivers several `.mbox` files (Inbox, Sent, per label); ask for all their paths, because a conversation lives half in Inbox and half in Sent and the split merges them into one thread.
 
 ## 2. Split (script, no reading)
 
-Run `scripts/mail_sweep.py split <mbox> <workdir>`. It writes one folder per thread (`thread.mbox` verbatim, `thread.txt` decoded, `snippet.txt` first 3KB) and one `manifest.tsv`: thread id, last date, from, to, subject, message count, size, attachments, and an `auto` column. Mechanically detectable noise (newsletters and lists, calendar invites, no-reply senders) is already written to `verdicts.tsv` as `drop` with an `auto:` note; you do not triage those, and the owner still sees them at review. You have read nothing yet.
+Run `scripts/mail_sweep.py split <workdir> <mbox> [<mbox> ...]`, all export files in one run so threads merge across them. It streams in two passes (headers, then byte slices), so memory stays flat however large the export; a multi-gigabyte mailbox takes minutes. For a first look before the real run, `--limit N` processes only the first N messages per file. It writes one folder per thread (`thread.mbox` verbatim, `thread.txt` decoded, `snippet.txt` first 3KB) and one `manifest.tsv`, ordered oldest thread first: thread id, last date, from, to, subject, message count, size, attachments, and an `auto` column. Mechanically detectable noise (newsletters and lists, calendar invites, no-reply senders) is already written to `verdicts.tsv` as `drop` with an `auto:` note; you do not triage those, and the owner still sees them at review. You have read nothing yet.
 
 ## 3. Triage the manifest
 
