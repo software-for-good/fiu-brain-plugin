@@ -76,7 +76,7 @@ One claim touching several entities is ONE atom with several entity labels; neve
 
 ## 6. Clearance
 
-Omit the field and the server defaults to team, raised automatically to the floor of the sources and labels. Use `founders` only when the fact itself is founders-sensitive (deal terms under wraps, HR-adjacent business facts, acquisition interest); use `public` only for facts FIU would put on its website. The server enforces the floors: an atom can never sit below its sources or its labels, and never above your own clearance. A label above your clearance is simply unusable; if that surprises you, tell the user instead of retrying.
+Omit the field and the server defaults to team, raised automatically to the floor of the sources and labels. Use `founders` only when the fact itself is founders-sensitive (deal terms under wraps, HR-adjacent business facts, acquisition interest); use `public` only for facts FIU would put on its website. The server enforces the floors: an atom can never sit below its sources or its labels, and never above your own clearance. A label above your clearance is simply unusable; if that surprises you, tell the human instead of retrying.
 
 ## 7. Attribution
 

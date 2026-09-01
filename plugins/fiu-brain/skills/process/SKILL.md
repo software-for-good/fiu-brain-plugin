@@ -27,7 +27,7 @@ Load `fiu-brain:extraction-rules` and apply it per source, `sources` set to the 
 
 ## 5. Confirm, per source
 
-Show the atoms as one compact numbered list of title, kind and labels. The user confirms, corrects or skips by number; do not walk through them one by one and do not summarise the source back at them. The titles are the summary.
+Show the atoms as one compact numbered list of title, kind and labels. The human confirms, corrects or skips by number; do not walk through them one by one and do not summarise the source back at them. The titles are the summary.
 
 ## 6. Submit and mark
 
@@ -35,4 +35,4 @@ Show the atoms as one compact numbered list of title, kind and labels. The user 
 
 ## 7. Report and continue
 
-Per round: sources processed, atoms accepted, rejected with reasons, personal sources flagged for removal, sources left in scope. Ask whether to continue with the next batch; stop when the user stops.
+Per round: sources processed, atoms accepted, rejected with reasons, personal sources flagged for removal, sources left in scope. Ask whether to continue with the next batch; stop when the human stops.
