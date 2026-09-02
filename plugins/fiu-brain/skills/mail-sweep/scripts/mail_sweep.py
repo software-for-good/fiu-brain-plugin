@@ -37,14 +37,16 @@ ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 INTERNAL_DOMAINS = ("foodinfluencersunited.com", "foodinfluencersunited.nl")
 SIGNATURE_FILENAME = re.compile(r"^(image(\d{3,})?\.(png|jpe?g|gif)|oledata\.mso|~wrd.*\.jpg|logo.*\.(png|jpe?g|gif)|signature.*\.(png|jpe?g))$", re.I)
 FOOTER_LOGO_MAX_BYTES = 30_000
-# Financial/legal matters between the holding companies (SFG and KMPI/RDPI/KIWI): loans,
-# shareholder documents. Bare "kiwi" is fruit in a food company's mail, so it only counts
-# uppercase or with corporate context; bare SFG stays allowed (vendor invoices name it).
+# Financial/legal matters around the holding companies (SFG and KMPI/RDPI/KIWI): loans,
+# shareholder documents, registry paperwork. Bare "kiwi" is fruit in a food company's
+# mail, so it only counts uppercase or with corporate context; bare SFG stays allowed
+# (too short to be safe), but the written-out company name signals legal context.
 HOLDING_FINANCIAL = re.compile(
     r"(?i:\b(?:kmpi|rdpi)\b)"
     r"|\bKIWI\b"
     r"|(?i:\bkiwi\s*(?:b\.?\s?v\.?\b|holding|beheer))"
     r"|(?i:aandeelhoud|leningsovereenkomst|geldlening)"
+    r"|(?i:software ?for ?good|\bkvk\b)"
 )
 
 
