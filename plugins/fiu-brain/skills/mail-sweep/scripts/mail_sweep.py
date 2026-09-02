@@ -34,6 +34,7 @@ CLEARANCES = ("public", "team", "founders")
 EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 NOREPLY = re.compile(r"^(no-?reply|noreply|notifications?|mailer-daemon|calendar-notification|do-?not-?reply)@", re.I)
 ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+INTERNAL_DOMAINS = ("foodinfluencersunited.com", "foodinfluencersunited.nl")
 
 
 def addresses(value):
@@ -127,15 +128,20 @@ def scan_offsets(mbox_paths, limit):
     return records
 
 
-def auto_verdict(headers_list, calendar_flags):
+def auto_verdict(headers_list, calendar_flags, participant_addresses):
     """Drop only what the mailbox owner never engaged with: every message must look
-    like list, calendar or robot mail. One human reply anywhere keeps the thread."""
+    like list, calendar or robot mail. One human reply anywhere keeps the thread.
+    FIU-internal-only threads also drop, so classified internal mail (contracts,
+    founder-to-founder matters) can never leak into the brain through a sweep; one
+    external participant anywhere in the thread lifts that rule."""
     if all(h.get("List-Id") or h.get("List-Unsubscribe") for h in headers_list):
         return "auto:newsletter-or-list"
     if calendar_flags and all(calendar_flags):
         return "auto:calendar-invite"
     if all(NOREPLY.match(decoded(h.get("From")).split("<")[-1].strip("> ")) for h in headers_list):
         return "auto:notification-sender"
+    if participant_addresses and all(a.split("@")[-1] in INTERNAL_DOMAINS for a in participant_addresses):
+        return "auto:fiu-internal-only"
     return None
 
 
@@ -202,7 +208,8 @@ def split(workdir, mbox_paths, limit):
                         from_addresses = addresses(message.get("From"))
                         if from_addresses:
                             sender_counts[from_addresses[-1]] = sender_counts.get(from_addresses[-1], 0) + 1
-                        recipients.update(addresses(message.get("To")))
+                        for recipient_header in ("To", "Cc", "Bcc"):
+                            recipients.update(addresses(message.get(recipient_header)))
                         message_calendar = False
                         for part in message.walk():
                             if part.get_filename():
@@ -229,7 +236,7 @@ def split(workdir, mbox_paths, limit):
                     "messages": written,
                 }, ensure_ascii=False, indent=2), encoding="utf-8")
 
-                auto = auto_verdict(headers_list, calendar_flags)
+                auto = auto_verdict(headers_list, calendar_flags, set(sender_counts) | recipients)
                 if auto:
                     auto_lines.append(f"{thread_id}\tdrop\t\t{auto}")
 
