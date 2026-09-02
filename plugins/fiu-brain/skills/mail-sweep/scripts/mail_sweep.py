@@ -37,6 +37,15 @@ ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 INTERNAL_DOMAINS = ("foodinfluencersunited.com", "foodinfluencersunited.nl")
 SIGNATURE_FILENAME = re.compile(r"^(image(\d{3,})?\.(png|jpe?g|gif)|oledata\.mso|~wrd.*\.jpg|logo.*\.(png|jpe?g|gif)|signature.*\.(png|jpe?g))$", re.I)
 FOOTER_LOGO_MAX_BYTES = 30_000
+# Financial/legal matters between the holding companies (SFG and KMPI/RDPI/KIWI): loans,
+# shareholder documents. Bare "kiwi" is fruit in a food company's mail, so it only counts
+# uppercase or with corporate context; bare SFG stays allowed (vendor invoices name it).
+HOLDING_FINANCIAL = re.compile(
+    r"(?i:\b(?:kmpi|rdpi)\b)"
+    r"|\bKIWI\b"
+    r"|(?i:\bkiwi\s*(?:b\.?\s?v\.?\b|holding|beheer))"
+    r"|(?i:aandeelhoud|leningsovereenkomst|geldlening)"
+)
 
 
 def is_real_attachment(part):
@@ -151,12 +160,15 @@ def scan_offsets(mbox_paths, limit):
     return records
 
 
-def auto_verdict(headers_list, calendar_flags, participant_addresses):
+def auto_verdict(headers_list, calendar_flags, participant_addresses, scan_text):
     """Drop only what the mailbox owner never engaged with: every message must look
     like list, calendar or robot mail. One human reply anywhere keeps the thread.
     FIU-internal-only threads also drop, so classified internal mail (contracts,
     founder-to-founder matters) can never leak into the brain through a sweep; one
-    external participant anywhere in the thread lifts that rule."""
+    external participant anywhere in the thread lifts that rule. Inter-BV financial
+    and legal threads drop on content, whoever participates."""
+    if HOLDING_FINANCIAL.search(scan_text):
+        return "auto:holding-financial"
     if all(h.get("List-Id") or h.get("List-Unsubscribe") for h in headers_list):
         return "auto:newsletter-or-list"
     if calendar_flags and all(calendar_flags):
@@ -261,7 +273,8 @@ def split(workdir, mbox_paths, limit):
                     "attachments": unique_attachments,
                 }, ensure_ascii=False, indent=2), encoding="utf-8")
 
-                auto = auto_verdict(headers_list, calendar_flags, set(sender_counts) | recipients)
+                auto = auto_verdict(headers_list, calendar_flags, set(sender_counts) | recipients,
+                                    decoded(last.get("Subject")) + "\n" + text)
                 if auto:
                     auto_lines.append(f"{thread_id}\tdrop\t\t{auto}")
 
