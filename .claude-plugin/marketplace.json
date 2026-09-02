@@ -9,7 +9,7 @@
       "name": "fiu",
       "source": "./plugins/fiu-brain",
       "description": "The FIU Brain skills: session start/stop, extraction rules, guardrails, the two sweeps and both processing loops.",
-      "version": "1.2.0"
+      "version": "1.3.0"
     }
   ]
 }

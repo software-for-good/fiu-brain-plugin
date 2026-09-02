@@ -7,6 +7,8 @@ share a Gmail thread id; a message exported in both files counts once.
 
 Usage:
   mail_sweep.py split <workdir> <mbox> [<mbox> ...] [--limit N]
+  mail_sweep.py senders <workdir> --owner <address> [--owner <address> ...]
+  mail_sweep.py apply-senders <workdir>
   mail_sweep.py review <workdir>
   mail_sweep.py package <workdir> <out.zip>
 
@@ -31,6 +33,11 @@ HEADER_CAP = 64 * 1024
 CLEARANCES = ("public", "team", "founders")
 EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 NOREPLY = re.compile(r"^(no-?reply|noreply|notifications?|mailer-daemon|calendar-notification|do-?not-?reply)@", re.I)
+ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+
+def addresses(value):
+    return [address.lower() for address in ADDRESS.findall(decoded(value))]
 
 
 def decoded(value):
@@ -120,15 +127,14 @@ def scan_offsets(mbox_paths, limit):
     return records
 
 
-def auto_verdict(headers_list, has_calendar):
-    for headers in headers_list:
-        if headers.get("List-Id") or headers.get("List-Unsubscribe"):
-            return "auto:newsletter-or-list"
-    if has_calendar:
+def auto_verdict(headers_list, calendar_flags):
+    """Drop only what the mailbox owner never engaged with: every message must look
+    like list, calendar or robot mail. One human reply anywhere keeps the thread."""
+    if all(h.get("List-Id") or h.get("List-Unsubscribe") for h in headers_list):
+        return "auto:newsletter-or-list"
+    if calendar_flags and all(calendar_flags):
         return "auto:calendar-invite"
-    sender = decoded(headers_list[-1].get("From"))
-    address = sender.split("<")[-1].strip("> ")
-    if NOREPLY.match(address):
+    if all(NOREPLY.match(decoded(h.get("From")).split("<")[-1].strip("> ")) for h in headers_list):
         return "auto:notification-sender"
     return None
 
@@ -163,8 +169,10 @@ def split(workdir, mbox_paths, limit):
                 texts = []
                 message_ids = []
                 participants = set()
+                sender_counts = {}
+                recipients = set()
+                calendar_flags = []
                 has_attachments = False
-                has_calendar = False
                 size = 0
                 written = 0
                 seen_ids = set()
@@ -191,11 +199,17 @@ def split(workdir, mbox_paths, limit):
                         participants.add(decoded(message.get("From")))
                         if message.get("To"):
                             participants.add(decoded(message.get("To")))
+                        from_addresses = addresses(message.get("From"))
+                        if from_addresses:
+                            sender_counts[from_addresses[-1]] = sender_counts.get(from_addresses[-1], 0) + 1
+                        recipients.update(addresses(message.get("To")))
+                        message_calendar = False
                         for part in message.walk():
                             if part.get_filename():
                                 has_attachments = True
                             if part.get_content_type() == "text/calendar":
-                                has_calendar = True
+                                message_calendar = True
+                        calendar_flags.append(message_calendar)
 
                 text = "\n\n---\n\n".join(texts)
                 (folder / "thread.txt").write_text(text, encoding="utf-8")
@@ -207,12 +221,15 @@ def split(workdir, mbox_paths, limit):
                     "thread_id": thread_id,
                     "message_ids": message_ids,
                     "participants": sorted(participants),
+                    "senders": sorted(sender_counts),
+                    "sender_counts": sender_counts,
+                    "recipients": sorted(recipients),
                     "subject": decoded(last.get("Subject")),
                     "source_at": thread_last_date.isoformat() if thread_last_date != EPOCH else None,
                     "messages": written,
                 }, ensure_ascii=False, indent=2), encoding="utf-8")
 
-                auto = auto_verdict(headers_list, has_calendar)
+                auto = auto_verdict(headers_list, calendar_flags)
                 if auto:
                     auto_lines.append(f"{thread_id}\tdrop\t\t{auto}")
 
@@ -260,6 +277,122 @@ def manifest_rows(workdir):
 
 def coverage_check(workdir, verdicts):
     return sorted(set(manifest_rows(workdir)) - set(verdicts))
+
+
+def verdict_notes(workdir):
+    """Latest verdict line per thread id, note included (read_verdicts drops notes)."""
+    path = Path(workdir) / "verdicts.tsv"
+    latest = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            fields = line.split("\t")
+            if len(fields) >= 2 and fields[1] in ("in", "drop", "sensitive", "unsure"):
+                latest[fields[0]] = (fields[1], fields[3] if len(fields) > 3 else "")
+    return latest
+
+
+def thread_correspondents(meta, owners):
+    """The people a thread is with: its non-owner senders; for owner-only threads
+    the non-owner recipients; pure self-mail files under (self)."""
+    senders = [a for a in meta.get("senders", []) if a not in owners]
+    if senders:
+        return senders, "sender"
+    recipients = [a for a in meta.get("recipients", []) if a not in owners]
+    if recipients:
+        return recipients, "recipient"
+    return ["(self)"], "self"
+
+
+def senders_report(workdir, owners):
+    workdir = Path(workdir)
+    if not owners:
+        sys.exit("pass every address the owner sends from: senders <workdir> --owner a@b [--owner c@d]")
+    (workdir / "owners.txt").write_text("\n".join(owners) + "\n", encoding="utf-8")
+    autos = {t for t, (_, note) in verdict_notes(workdir).items() if note.startswith("auto:")}
+    rows = {}
+    skipped = 0
+    for meta_path in sorted(workdir.glob("threads/*/meta.json")):
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if meta["thread_id"] in autos:
+            skipped += 1
+            continue
+        correspondents, seen_as = thread_correspondents(meta, owners)
+        for address in correspondents:
+            row = rows.setdefault(address, {"seen_as": seen_as, "threads": 0, "mails": 0, "last": "", "examples": []})
+            row["threads"] += 1
+            if seen_as == "sender":
+                row["mails"] += meta.get("sender_counts", {}).get(address, 0)
+            else:
+                row["mails"] += meta.get("messages", 0)
+            row["last"] = max(row["last"], (meta.get("source_at") or "")[:10])
+            subject = (meta.get("subject") or "(no subject)")[:50]
+            if subject not in row["examples"]:
+                row["examples"].append(subject)
+    with open(workdir / "senders.tsv", "w", encoding="utf-8") as out:
+        out.write("address\tseen_as\tthreads\tmails\tlast_date\texamples\tverdict\tnote\n")
+        for address in sorted(rows, key=lambda a: (-rows[a]["mails"], a)):
+            row = rows[address]
+            out.write("\t".join([address, row["seen_as"], str(row["threads"]), str(row["mails"]), row["last"],
+                                 " || ".join(row["examples"][-2:]), "", ""]) + "\n")
+    print(f"correspondents: {len(rows)}; auto-dropped threads left out of the table: {skipped}; "
+          f"fill the verdict column (include/exclude/partial) in {workdir / 'senders.tsv'}")
+
+
+def apply_senders(workdir):
+    workdir = Path(workdir)
+    owners = workdir / "owners.txt"
+    if not owners.exists():
+        sys.exit("owners.txt not found; run the senders command first")
+    owners = [a for a in owners.read_text(encoding="utf-8").split() if a]
+    sender_verdicts = {}
+    unfilled = []
+    for line in (workdir / "senders.tsv").read_text(encoding="utf-8").splitlines()[1:]:
+        if not line.strip():
+            continue
+        fields = line.split("\t")
+        verdict = fields[6].strip() if len(fields) > 6 else ""
+        if verdict not in ("include", "exclude", "partial"):
+            unfilled.append(fields[0])
+        sender_verdicts[fields[0]] = verdict
+    if unfilled:
+        sys.exit(f"{len(unfilled)} senders still lack include/exclude/partial: "
+                 f"{', '.join(unfilled[:8])}{' ...' if len(unfilled) > 8 else ''}")
+    existing = verdict_notes(workdir)
+    new_lines = []
+    added_in = added_drop = kept_manual = 0
+    partial_threads = []
+    for meta_path in sorted(workdir.glob("threads/*/meta.json")):
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        thread_id = meta["thread_id"]
+        previous_note = existing.get(thread_id, (None, ""))[1]
+        if previous_note.startswith("auto:"):
+            continue
+        if thread_id in existing and not previous_note.startswith("sender"):
+            kept_manual += 1
+            continue
+        correspondents, _ = thread_correspondents(meta, owners)
+        verdicts = [sender_verdicts.get(address) for address in correspondents]
+        if None in verdicts:
+            sys.exit(f"{thread_id} has correspondent {correspondents[verdicts.index(None)]} "
+                     f"that senders.tsv does not know; re-run senders")
+        if "include" in verdicts:
+            new_lines.append(f"{thread_id}\tin\t\tsender:{correspondents[verdicts.index('include')]}")
+            added_in += 1
+        elif "partial" in verdicts:
+            partial_threads.append(thread_id)
+        else:
+            new_lines.append(f"{thread_id}\tdrop\t\tsender-excluded")
+            added_drop += 1
+    verdict_path = workdir / "verdicts.tsv"
+    text = verdict_path.read_text(encoding="utf-8") if verdict_path.exists() else ""
+    if text and not text.endswith("\n"):
+        text += "\n"
+    verdict_path.write_text(text + "".join(line + "\n" for line in new_lines), encoding="utf-8")
+    print(f"in: {added_in}; drop: {added_drop}; per-thread verdicts kept: {kept_manual}")
+    if partial_threads:
+        print(f"partial senders leave {len(partial_threads)} threads for manual triage:")
+        for thread_id in partial_threads:
+            print(f"  {thread_id}")
 
 
 def review(workdir):
@@ -314,6 +447,15 @@ if __name__ == "__main__":
             limit = int(arguments[flag_index + 1])
             del arguments[flag_index:flag_index + 2]
         split(arguments[1], arguments[2:], limit)
+    elif command == "senders":
+        owners = []
+        while "--owner" in arguments:
+            flag_index = arguments.index("--owner")
+            owners.append(arguments[flag_index + 1].lower())
+            del arguments[flag_index:flag_index + 2]
+        senders_report(arguments[1], owners)
+    elif command == "apply-senders":
+        apply_senders(arguments[1])
     elif command == "review":
         review(arguments[1])
     elif command == "package":

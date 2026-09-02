@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /mail-sweep
 
-You turn a mailbox export into a package of sources. The script moves every byte; you read as little content as possible (the manifest, snippets, capped excerpts for the unsure) and write verdict lines. `/process` makes the atoms later, after ingest.
+You turn a mailbox export into a package of sources. The script moves every byte; you read as little content as possible (the sender table, snippets, capped excerpts for the leftovers) and write verdict lines. `/process` makes the atoms later, after ingest.
 
 Needs a shell (Claude Code or Cowork). Without one, say so and point at the runbook: export, then run this skill where a shell exists.
 
@@ -23,31 +23,24 @@ Ask for the paths of all `.mbox` files, parts included; the split takes them in 
 
 ## 2. Split (script, no reading)
 
-Run `scripts/mail_sweep.py split <workdir> <mbox> [<mbox> ...]`, all export files in one run so threads merge across them. It streams in two passes (headers, then byte slices), so memory stays flat however large the export; a multi-gigabyte mailbox takes minutes. For a first look before the real run, `--limit N` processes only the first N messages per file. It writes one folder per thread (`thread.mbox` verbatim, `thread.txt` decoded, `snippet.txt` first 3KB) and one `manifest.tsv`, ordered oldest thread first: thread id, last date, from, to, subject, message count, size, attachments, and an `auto` column. Mechanically detectable noise (newsletters and lists, calendar invites, no-reply senders) is already written to `verdicts.tsv` as `drop` with an `auto:` note; you do not triage those, and the owner still sees them at review. You have read nothing yet.
+Run `scripts/mail_sweep.py split <workdir> <mbox> [<mbox> ...]`, all export files in one run so threads merge across them. It streams in two passes (headers, then byte slices), so memory stays flat however large the export; a multi-gigabyte mailbox takes minutes. For a first look before the real run, `--limit N` processes only the first N messages per file. It writes one folder per thread (`thread.mbox` verbatim, `thread.txt` decoded, `snippet.txt` first 3KB) and one `manifest.tsv`, ordered oldest thread first: thread id, last date, from, to, subject, message count, size, attachments, and an `auto` column. Mechanically detectable noise is already written to `verdicts.tsv` as `drop` with an `auto:` note, but only when the owner never engaged: every message in the thread must be list mail, a calendar invite, or from a no-reply sender, so one human reply keeps a thread alive. You never look at auto-dropped threads; the owner still sees them at review. Known cost: a single never-answered mail from a sender whose mail platform stamps list headers drops unseen; the mailbox of the colleague who answered it catches that conversation instead. You have read nothing yet.
 
-## 3. Triage the manifest
+## 3. Verdicts per sender, not per thread
 
-Read `manifest.tsv` in chunks of a few hundred lines and append one verdict per remaining thread to `verdicts.tsv`, tab-separated: `thread_id`, verdict (`in`, `drop`, `sensitive`, `unsure`), clearance (empty means team), note. A later line for the same id overrides an earlier one, so you can also overrule an `auto:` drop. Judge on content, not direction; an internal thread recording a client decision is `in`.
+Run `scripts/mail_sweep.py senders <workdir> --owner <address>`, repeating `--owner` for every address the owner sends from. It buckets the remaining threads by correspondent — the non-owner senders; for owner-only threads the recipients; pure self-mail as `(self)` — and writes `senders.tsv` with thread and mail counts, auto-dropped threads left out. Read that table instead of the manifest: one line per correspondent, recognisable by domain. Fill its verdict column: `include` (conversations with them belong in the brain), `exclude` (never work content: personal senders, billing, system and marketing mail), `partial` (genuinely mixed; rare, costs per-thread work later). Judge on content, not direction, and never quote anywhere: personal and private mail (health, family, anything not work) and employment matters (contracts, salaries, reviews, anything HR) are always `exclude`.
 
-Always `drop`, and never quote anywhere:
+Show the owner the filled table in those three buckets, largest mail count first; they correct at sender level and can ask what a sender writes — only then read that sender's snippets.
 
-- personal and private mail: health, family, anything not work
-- employment matters: contracts, salaries, reviews, anything HR
-- newsletters, notifications, invoices, system mail, calendar invitations
-- threads that only arrange logistics
+## 4. Apply, then triage only the leftovers
 
-`sensitive` (suggested clearance `founders`) is for work content the team should not see: deal terms under wraps, founder-only strategy. `unsure` is honest; do not force it.
-
-## 4. Snippets for the unsure
-
-For each `unsure`, read `threads/<id>/snippet.txt` only; when the snippet does not settle it, read at most the first 10KB of `thread.txt`, never the whole file. Update the verdict. Bodies of `drop` threads are never opened.
+Run `scripts/mail_sweep.py apply-senders <workdir>`: a thread with at least one included correspondent goes `in` (clearance team), a thread with only excluded correspondents drops, and threads riding on `partial` senders alone are printed for manual triage. Triage just those few in `verdicts.tsv`, tab-separated: `thread_id`, verdict (`in`, `drop`, `sensitive`, `unsure`), clearance (empty means team), note. Judge from the manifest row; when that does not settle it, read `threads/<id>/snippet.txt`, then at most the first 10KB of `thread.txt`, never the whole file. A later line for the same id overrides an earlier one, so per-thread lines beat sender rules — this is also how the owner overrides any verdict at review. `sensitive` (suggested clearance `founders`) is for work content the team should not see: deal terms under wraps, founder-only strategy. `unsure` is honest; do not force it, but settle it before packaging. Bodies of `drop` threads are never opened.
 
 ## 5. The owner reviews, then approves
 
-Run `scripts/mail_sweep.py review <workdir>`: it prints the three lists, subjects only. The owner corrects and approves. This is the consent gate; never skip it, never summarise it away. Nothing proceeds without their explicit yes.
+Run `scripts/mail_sweep.py review <workdir>`: it prints the verdict lists, subjects only. The owner corrects and approves. This is the consent gate; never skip it, never summarise it away. Nothing proceeds without their explicit yes.
 
 ## 6. Package and hand over
 
-Run `scripts/mail_sweep.py package <workdir> <out.zip>`: only approved threads enter the zip, each as `.mbox` + `.txt` + `meta.json` (message ids, thread id, participants, source date, clearance). Dropped threads never leave the laptop.
+Run `scripts/mail_sweep.py package <workdir> <out.zip>`: only approved threads enter the zip, each as `.mbox` + `.txt` + `meta.json` (message ids, thread id, participants and senders, source date, clearance). Dropped threads never leave the laptop.
 
 The zip goes to Rob for `php artisan brain:ingest-raws`. If it contains `sensitive` threads, hand it over through Drive or a protected archive, not plain mail. Report counts per verdict and anything that failed; remind the owner the drop list stays theirs and is never uploaded anywhere.
