@@ -35,6 +35,29 @@ EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 NOREPLY = re.compile(r"^(no-?reply|noreply|notifications?|mailer-daemon|calendar-notification|do-?not-?reply)@", re.I)
 ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 INTERNAL_DOMAINS = ("foodinfluencersunited.com", "foodinfluencersunited.nl")
+SIGNATURE_FILENAME = re.compile(r"^(image(\d{3,})?\.(png|jpe?g|gif)|oledata\.mso|~wrd.*\.jpg|logo.*\.(png|jpe?g|gif)|signature.*\.(png|jpe?g))$", re.I)
+FOOTER_LOGO_MAX_BYTES = 30_000
+
+
+def is_real_attachment(part):
+    """A signature/footer image is not a real attachment; only count parts a sender
+    actually meant to share as a file. Gmail marks pasted signature images as
+    attachment-disposition with a generic name (image.png, 50KB banners included),
+    so images are judged by name always and by size when embedded via cid:."""
+    filename = part.get_filename()
+    if not filename:
+        return False
+    if not part.get_content_type().startswith("image/"):
+        return True
+    if SIGNATURE_FILENAME.match(decoded(filename)):
+        return False
+    if not ("inline" in (part.get("Content-Disposition") or "").lower() or part.get("Content-ID")):
+        return True
+    try:
+        size = len(part.get_payload(decode=True) or b"")
+    except Exception:
+        size = 0
+    return size >= FOOTER_LOGO_MAX_BYTES
 
 
 def addresses(value):
@@ -178,7 +201,7 @@ def split(workdir, mbox_paths, limit):
                 sender_counts = {}
                 recipients = set()
                 calendar_flags = []
-                has_attachments = False
+                attachment_names = []
                 size = 0
                 written = 0
                 seen_ids = set()
@@ -212,12 +235,13 @@ def split(workdir, mbox_paths, limit):
                             recipients.update(addresses(message.get(recipient_header)))
                         message_calendar = False
                         for part in message.walk():
-                            if part.get_filename():
-                                has_attachments = True
+                            if is_real_attachment(part):
+                                attachment_names.append(decoded(part.get_filename()))
                             if part.get_content_type() == "text/calendar":
                                 message_calendar = True
                         calendar_flags.append(message_calendar)
 
+                unique_attachments = list(dict.fromkeys(attachment_names))
                 text = "\n\n---\n\n".join(texts)
                 (folder / "thread.txt").write_text(text, encoding="utf-8")
                 (folder / "snippet.txt").write_text(text[:SNIPPET_BYTES], encoding="utf-8")
@@ -234,6 +258,7 @@ def split(workdir, mbox_paths, limit):
                     "subject": decoded(last.get("Subject")),
                     "source_at": thread_last_date.isoformat() if thread_last_date != EPOCH else None,
                     "messages": written,
+                    "attachments": unique_attachments,
                 }, ensure_ascii=False, indent=2), encoding="utf-8")
 
                 auto = auto_verdict(headers_list, calendar_flags, set(sender_counts) | recipients)
@@ -248,7 +273,7 @@ def split(workdir, mbox_paths, limit):
                     decoded(last.get("Subject"))[:120],
                     str(written),
                     str(max(1, size // 1024)),
-                    "yes" if has_attachments else "no",
+                    ", ".join(unique_attachments[:3])[:80],
                     auto or "",
                 ]) + "\n")
     finally:
