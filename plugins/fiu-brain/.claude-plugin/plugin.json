@@ -1,7 +1,7 @@
 {
   "name": "fiu",
   "description": "The FIU Brain skills: start, stop, extraction-rules, guardrails, mail-sweep, transcript-sweep, process and process-proposals. Updated through this repository; clients sync it.",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "author": {
     "name": "Food Influencers United"
   }
