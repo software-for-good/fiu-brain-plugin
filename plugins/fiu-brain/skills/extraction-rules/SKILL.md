@@ -11,7 +11,7 @@ Every atom in the brain is made with these rules. `/stop`, `/process` and every 
 One test per candidate claim, all three parts must hold:
 
 1. **Would a colleague, a month from now, act or decide differently for knowing this?**
-2. **Is it not already derivable** from the registers, dashboards or code? (Which websites exist, contact details, live supermarkets: the systems hold those.)
+2. **Is it not already derivable** from the registers, dashboards or code? (Which websites exist, contact details, live supermarkets, subscriptions, orders: the FIU database holds all of that, so none of it becomes an atom. The database answers what is true now; the story of how it got there is not in the data.)
 3. **Does it stand alone?** Readable without the source, by someone who was not there.
 
 Make an atom for:
@@ -25,6 +25,9 @@ Make an atom for:
 - how FIU works: definitions, service descriptions, pricing rules, ways of working (these become proposals)
 - an agreed action item, as observed: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling still is not
 - an absence that matters: when a colleague would act differently for knowing something is not arranged, record the absence as a claim: "At the time of writing FIU has no pricing agreement with Jumbo." Date it in the body; the atom that arranges it later supersedes it
+- a notable first or a company or client milestone to be proud of, dated: the first basket ever, the first supermarket live, a new supermarket contract, a partnership start or end. Not every first, and not what the database records anyway (subscription starts, service activations, order counts). Written precisely (exact date, specific fact) so it is unlikely to ever need correction
+- an important transition in how FIU or a client works: one atom for the change, old and new named in the body, dated at the change. The replaced state gets no atom of its own
+- the sales trail with a client or prospect: a proposal sent (what was offered, at what price), acceptance or rejection, and why. Nova holds subscriptions once they run; the funnel before that lives only in mail
 
 Never make an atom for:
 

@@ -23,7 +23,7 @@ Use `$ARGUMENTS` when given. Otherwise ask one short question about the goal, mu
 
 ## 4. Load context
 
-Derive candidate labels from the goal and check them with the `labels` tool; never guess a slug. Call `context_pack` once, goal written in English, labels attached. Read it silently: agreed atoms are company truth, observed atoms are facts about named entities, proposals are not yet true and you say so whenever you lean on one. Tell the human in one line how fresh the brain is and whether it holds anything on their topic; when it holds nothing, say that plainly instead of filling the gap.
+Derive candidate labels from the goal and check them with the `labels` tool; never guess a slug. Call `context_pack` once, goal written in English, labels attached. Read it silently: agreed atoms are company truth, observed atoms are facts about named entities, proposals are not yet true and you say so whenever you lean on one. For anything before September 2026 the brain holds then-latest truths, notable milestones and important transitions only; older intermediate states were deliberately not backfilled. A gap in the deep past means "not recorded", never "it did not happen". Tell the human in one line how fresh the brain is and whether it holds anything on their topic; when it holds nothing, say that plainly instead of filling the gap.
 
 ## 5. Work
 
