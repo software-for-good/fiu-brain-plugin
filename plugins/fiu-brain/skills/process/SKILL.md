@@ -17,7 +17,7 @@ Ask two things in one message: which scope (one person's sweep, one type, or the
 
 ## 3. Fetch and read, one source at a time
 
-Load `fiu:extraction-rules` once, before the first fetch: you read every source with its bar in mind, and its yield expectations decide how much of a source is worth reading at all. Then `list_raws` for the scope with `order` set to `desc`; it returns each source's id and the endpoint template. Fetch a source by curling `GET {mcp_path}/raws/{id}` (the same bearer token the connector uses) into a local file. Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time, never ahead. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
+Load `fiu:extraction-rules` once, before the first fetch: you read every source with its bar in mind, and its yield expectations decide how much of a source is worth reading at all. Then `list_raws` for the scope; it returns each source's id and the endpoint template. Fetch a source by curling `GET {mcp_path}/raws/{id}` (the same bearer token the connector uses) into a local file. Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time, never ahead. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
 
 If a source turns out personal or private: extract nothing, quote nothing, and report it at the end so Rob can remove it; that removal is a manual operation on purpose.
 
