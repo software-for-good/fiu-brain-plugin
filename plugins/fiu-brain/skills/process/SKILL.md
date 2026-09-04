@@ -29,7 +29,7 @@ Before a candidate enters the round's list, `search` its entity labels. Four out
 
 ## 5. Verify the round
 
-When the FIU codebase is among the session's working folders, verify the round before showing it: send an agent over the claims that are about how the product or the tech works ("how does X work", "why doesn't Y work", what a feature does) and annotate each as verified, contradicted or not checkable; correct or drop contradicted claims and show the human what the code said. Verify nothing else: a claim the database could answer (subscription dates and fees, what is live) should not be an atom at all; that is bar test 2, applied at extraction, not an agent's search job. Without the codebase, skip this step and say so in the report.
+When the FIU codebase is among the session's working folders, verify the round before showing it: send an agent over the claims that are about how the product or the tech works ("how does X work", "why doesn't Y work", what a feature does) and annotate each as verified, contradicted or not checkable; correct or drop contradicted claims and show the human what the code said. Verify nothing else: live register state (subscription dates, what is live now) is not an atom at all; the extraction rules keep it out at extraction, and that is not an agent's search job. Without the codebase, skip this step and say so in the report.
 
 ## 6. Confirm, per round
 

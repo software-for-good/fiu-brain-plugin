@@ -7,40 +7,38 @@ user-invocable: false
 
 Every atom in the brain is made with these rules. `/stop`, `fiu:process` and every ingest load this same file and never restate it.
 
-## 1. The bar: does this deserve an atom?
+## 1. What the brain holds
 
-One test per candidate claim, all three parts must hold:
+Say what goes in before asking what stays out. The brain serves three uses, and every atom belongs to one of them.
 
-1. **Would a colleague, a month from now, act or decide differently for knowing this?**
-2. **Is it not already derivable** from the registers, dashboards or code? (Which websites exist, contact details, live supermarkets, subscriptions, orders: the FIU database holds all of that, so none of it becomes an atom. The database answers what is true now; the story of how it got there is not in the data.)
-3. **Does it stand alone?** Readable without the source, by someone who was not there.
+**Account management and sales: observed atoms.** Knowledge about a named client, partner, prospect or contact that the next conversation or the next deal turns on:
 
-Make an atom for:
-
-- decisions and agreements, with who agreed and when
-- a client's position, preference, objection or constraint
-- agreed numbers: prices, commissions, budgets, volumes, deadlines
-- who does what at a client: role, decision maker, a change of role
-- a deliberate deviation from how FIU normally works, plus the reason
-- why something failed, stalled or succeeded
-- how FIU works: definitions, service descriptions, pricing rules, ways of working (these become proposals)
+- agreements and agreed numbers: prices, commissions, budgets, volumes, deadlines, terms, with who agreed and when
+- their position, preference, objection or constraint
+- their plans and milestones, dated: a launch, a go-live, a campaign window, a postponement. "Chicks Love Food planned to launch its member environment CLF Club in mid-September 2026." That is a plan a colleague prepares for, not scheduling
+- the sales trail from first interest onward: who showed interest in what and when, what was offered at what price, accepted or rejected, and why. Nova holds subscriptions once they run; the funnel before that lives only here
+- who does what on their side: role, decision maker, a change of role
+- what is not arranged with them yet, when a colleague would act differently for knowing it, dated in the body; the atom that arranges it later supersedes it
+- a deliberate deviation from how FIU normally works for them, with the reason
+- why something with them failed, stalled or succeeded
 - an agreed action item, as observed: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling still is not
-- an absence that matters: when a colleague would act differently for knowing something is not arranged, record the absence as a claim: "At the time of writing FIU has no pricing agreement with Jumbo." Date it in the body; the atom that arranges it later supersedes it
-- a notable first or a company or client milestone to be proud of, dated: the first basket ever, the first supermarket live, a new supermarket contract, a partnership start or end. Not every first, and not what the database records anyway (subscription starts, service activations, order counts). Written precisely (exact date, specific fact) so it is unlikely to ever need correction
-- an important transition in how FIU or a client works: one atom for the change, old and new named in the body, dated at the change. The replaced state gets no atom of its own
-- the sales trail with a client or prospect: a proposal sent (what was offered, at what price), acceptance or rejection, and why. Nova holds subscriptions once they run; the funnel before that lives only in mail
+- relationship colour the contact volunteered in a work setting and would expect a good account manager to remember: a holiday, a move, a new colleague, a preference for calls over mail
 
-Never make an atom for:
+**Support: proposals on the service label.** How a service behaves, as it was explained to someone: the answer given to a real question, a known limitation, a gotcha, a workaround, what an integration needs from the other side, what a service is in one sentence. "During an Any to Basket trial a rate limit of one basket per minute applies" belongs here, even when one client hit it and even though the docs mention it: that a fact exists somewhere does not put it in a colleague's head. Support atoms come from questions actually asked and things learned the hard way, so the brain grows a real FAQ rather than a copy of the docs. They are proposals because they apply to everyone; a founder confirms them before they are repeated to clients.
 
-- scheduling, logistics, availability, small talk
-- anything the registers already hold
-- status that is stale within weeks and was not a decision
-- personal or private matters: health, family, performance, salary, anything HR. Skip them, never quote them anywhere, and report that the source contained personal material
-- speculation with no owner ("we could maybe ...") unless someone decided it
-- the argument of an article or document you were handed; only a company-wide takeaway becomes a proposal
-- your own reasoning, or a summary of the session
+**Company knowledge: proposals.** How FIU works and what it does or does not do: pricing rules and policies, ways of working, definitions, decisions with who decided and why, market knowledge, notable firsts and milestones (dated and precise, so they never need correcting), important transitions (one atom for the change, old and new named in the body, dated at the change; the replaced state gets no atom of its own), and everything about supermarkets, whose arrangements apply to every client.
 
-**Typical survivors of the bar** (calibration, never a target): a mail thread 0 to 3 atoms, an hour of meeting 3 to 8, a working session 0 to 3. Zero is a normal outcome; say so and move on. The number to distrust is the high one: thirty from one source means the bar slipped, and every weak atom taxes every future session that has to scan past it. A source that produced nothing produced nothing.
+**The bar.** One test, both halves must hold: would a colleague, a month from now, act or decide differently for knowing this, and does it stand alone, readable without the source by someone who was not there? That a fact is also in the docs, on the website, in the code or in a mail does not fail the bar.
+
+**Numbers.** An agreed number is always an atom. A measured number (traffic, saves, conversion, a share) is an atom only when someone used it to decide or to persuade, and then dated and attributed in the body: "On 1 September 2026 Rob told Lemone that FIU's traffic is 70 to 80 percent mobile." A source full of figures (a report, a table, a dashboard export) gets one atom that says what it is and points at the raw; the figures themselves stay in the raw, which colleagues can read when they must.
+
+**What stays out.** Three lists, from wide to narrow.
+
+- For every atom: live register state the database owns and that changes under the brain's feet (which websites exist, contact details, subscriptions, orders, what is live now); a stray dashboard number; the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
+- For observed atoms about external contacts: nothing about health, nothing learned outside the work relationship, no judgments about the person. Everything else they volunteered is allowed when it helps the next conversation.
+- For company-wide atoms and for FIU's own people: strictly nothing personal, nothing HR (salary, performance, contracts, reviews). Skip it, quote nothing, and report that the source contained personal material.
+
+**Calibration** (never a target): a support or account thread 1 to 4 atoms, a multi-month thread up to 8, an hour of meeting 3 to 8, a strategy document 3 to 10, a working session 0 to 3. Zero is a normal outcome; say so and move on. Distrust repetition more than a count: thirty atoms that restate each other mean the bar slipped, and every weak atom taxes every future session that has to scan past it.
 
 When in doubt, leave it out. A missing atom costs one question later. A wrong atom gets repeated as truth.
 
@@ -56,10 +54,14 @@ When in doubt, leave it out. A missing atom costs one question later. A wrong at
 
 ## 3. observed or proposal
 
-- `observed`: a fact about one or a few named entities. Live immediately, no approval.
-- `proposal`: anything that generalises beyond named entities (a market, a trend, "German brands", a rule, how FIU works), and anything that contradicts an existing agreed atom. A founder decides.
+Observed atoms go live without approval, so the lane is decided by scope, never by certainty:
 
-The test is scope, not certainty. "Heinz DE thinks our rates are high" is observed. "German brands find our rates high" is a proposal, however sure you are.
+- `observed`: the claim is about one to a few named external parties and carries their labels: `websites/`, `partner/`, `prospect/`, `person/`. At least one, expected one to three, never more than 15. The server refuses an observed atom outside that range and points at the proposal lane; apply the rule yourself before it has to.
+- `proposal`: everything else. Anything that applies to everyone or generalises: a service and how it behaves, a supermarket and what is arranged with it, a market, a trend, "German brands", a rule, how FIU works. Also anything that contradicts an existing agreed atom. A founder decides.
+
+A service or supermarket label never makes an atom observed, and a client label is not a vehicle for a general claim: "Lemone hit the one-basket-per-minute trial limit" is the rate limit in disguise. The rate limit is a proposal; what Lemone did is at most an observed footnote, if a colleague would act on it.
+
+"Heinz DE thinks our rates are high" is observed. "German brands find our rates high" is a proposal, however sure you are.
 
 A claim that contradicts an agreed atom becomes a proposal that states both values in the body and names the atom it contradicts. Never pick a side silently.
 
@@ -77,7 +79,7 @@ Call the `labels` tool before assigning any label. Never guess a slug from a nam
 - Free (`person/<email>`, `partner/`, `prospect/`) reuse a listed value when one fits; create a new one only when it is genuinely new.
 - Competitors get `theme/competition` only, never a label of their own.
 
-One claim touching several entities is ONE atom with several entity labels; never duplicate an atom per client. Label what the claim is about, not everything it mentions. One to six labels is normal, and almost every observed atom carries at least one entity label.
+One claim touching several entities is ONE atom with several entity labels; never duplicate an atom per client. Label what the claim is about, not everything it mentions. One to six labels is normal; every observed atom carries one to 15 external-entity labels (section 3).
 
 ## 6. Clearance
 
@@ -127,6 +129,12 @@ Three atoms, labels `websites/heinz-de` and `person/anna@heinz.com`:
 3. "Heinz DE wants to see the creator selection earlier in the process than in 2025." (observed)
 
 Not an atom: the next appointment. That is scheduling.
+
+An atom, had Anna said it: "Heinz DE launches its new recipe site on 15 October 2026." A client's launch date is a plan a colleague prepares for, not scheduling.
+
+From the same week, all proposals because they apply to everyone: "During an Any to Basket trial a rate limit of one basket per minute applies." "FIU has no telephone customer service." "Flink shows a buy button only when its own share of a recipe's ingredients is available."
+
+Wrong, as observed: "Lemone hit the one-basket-per-minute trial rate limit." A general rule wearing a client label; the rate limit is a proposal.
 
 Wrong: "Heinz DE approved Q4, cut the budget and wants creators earlier." Three claims in one.
 Wrong: "Q4 update Heinz." Not a claim.

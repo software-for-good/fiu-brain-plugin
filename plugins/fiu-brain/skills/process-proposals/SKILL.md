@@ -23,7 +23,7 @@ Show title, body, source date, labels and origin. When the proposal carries `pro
 
 ## 4. Decide, per group
 
-Per item the founder can:
+The founder may rule on a whole group in one word; walk the items one by one only where they ask. Per item the founder can:
 
 - approve
 - approve with an edit: the body is immutable, so submit the corrected wording as a new proposal citing the original in its body, decline the original with reason "replaced by the corrected version", then approve the corrected one
