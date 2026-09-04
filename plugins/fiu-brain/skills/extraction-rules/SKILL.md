@@ -72,6 +72,7 @@ The moment of the source: the mail, the meeting, the session. Never the moment o
 Call the `labels` tool before assigning any label. Never guess a slug from a name.
 
 - Register-bound (`websites/`, `service/`, `supermarket/`) must match the tool's listing exactly. No match means no label; report the name so it can be added to the register.
+- A service is labelled at group level: `service/r2b`, `service/a2b`. The tiers of one service hardly differ in what the brain knows about them, so the tier slug (`service/r2b-custom`) is added only when the claim is about that tier specifically and the distinction would change what a colleague does, and then the atom carries both, group and tier, so a search on the group finds everything.
 - Curated (`business_unit/`, `country/`, `theme/`, `type/`) come from the fixed lists the tool shows.
 - Free (`person/<email>`, `partner/`, `prospect/`) reuse a listed value when one fits; create a new one only when it is genuinely new.
 - Competitors get `theme/competition` only, never a label of their own.
