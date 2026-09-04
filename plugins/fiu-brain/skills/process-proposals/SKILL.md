@@ -19,11 +19,19 @@ If the approve and decline tools are not on the connector, say up front that the
 
 `search` with `statuses: ["proposed"]`. Group by label rather than by date; a founder decides better on ten related claims than on ten unrelated ones. Within a group, most certain first.
 
-## 3. Context per atom
+## 3. Verify product claims against the code
+
+Proposed atoms about how the product or the tech works (what a feature does, how an integration behaves, a limit, a rule the software applies) are checked against the FIU codebase before a founder approves them; the process flow does not check them, because approval is where company truth is minted and where a founder with code access is present.
+
+- When the FIU codebase is among the session's working folders, send an agent over those atoms and mark each one verified, contradicted or not checkable. Show the founder what the code says next to each claim. A contradicted claim is approved with an edit or declined, never approved as it stands.
+- When the codebase is not available, say so once and ask whether the founder wants to add it before deciding. If they cannot or will not, leave the product claims open and continue with the rest; they wait for a founder who has code access.
+- Never approve a product claim that was neither verified nor explicitly waived by the founder.
+
+## 4. Context per atom
 
 Show title, body, source date, labels and origin. When the atom carries `proposes_to_supersede`, `get` the target and show both claims side by side. When one `search` on the title's key terms surfaces directly related atoms, mention them in one line; do not go hunting further.
 
-## 4. Decide, per group
+## 5. Decide, per group
 
 The founder may rule on a whole group in one word; walk the items one by one only where they ask. Per item the founder can:
 
@@ -34,10 +42,10 @@ The founder may rule on a whole group in one word; walk the items one by one onl
 
 Before approving anything that contradicts an existing company-wide atom, show both and ask which supersedes which; never resolve a contradiction yourself. Where clearance can be lowered, offer it: knowledge that arrived as founders material but is useful to the team should not stay locked up by accident.
 
-## 5. Write
+## 6. Write
 
 Call the approve and decline tools. Until those exist on the connector, produce the decisions as a clean list and say explicitly that nothing was written to the brain yet.
 
-## 6. Report
+## 7. Report
 
 Approved, declined with reasons, left open, and how many proposed atoms remain.
