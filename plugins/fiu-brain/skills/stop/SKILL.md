@@ -19,11 +19,11 @@ Action items and absence claims are atoms too; the extraction rules define both 
 
 ## 3. Show the harvest, then wait
 
-Three blocks, most certain first, every line numbered so the human can react by number:
+Three tables, most certain first, every row numbered so the human can react by number. Never prose, never a plain list.
 
-1. **Certain.** One compact list: title, kind, labels, clearance when not team. A single confirmation accepts them all.
-2. **Doubtful.** One multiple choice per item: option A, option B, or skip. Never guess on the human's behalf.
-3. **Company-wide.** Named separately, with one line saying these enter as proposed, go to the founders and are not truth until approved.
+1. **Certain.** Columns: number, claim, kind, labels, clearance when not team. A single confirmation accepts them all.
+2. **Doubtful.** Columns: number, claim, option A, option B. The human picks A, B or skip. Never guess on the human's behalf.
+3. **Company-wide.** Columns: number, claim, labels. One line above the table says these enter as proposed, go to the founders and are not truth until approved.
 
 Nothing is sent before the human reacts. They may approve with a correction in one move ("akkoord, maar het was 1.200"): apply it and do not ask again. Record every correction verbatim for the report; that feedback is how the extraction rules get better.
 
