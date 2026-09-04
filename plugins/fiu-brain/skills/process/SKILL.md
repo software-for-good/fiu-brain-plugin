@@ -1,15 +1,15 @@
 ---
-description: Turn unprocessed sources in the FIU Brain into atoms, in small batches, as a conversation. This is where classification, labels and extraction happen.
-disable-model-invocation: true
+description: Turn the queue of unprocessed sources in the FIU Brain into atoms, in small batches, as a conversation. This is where classification, labels and extraction happen. Reached from /start when a founder chooses to process the queue; not a session entry point of its own.
+user-invocable: false
 ---
 
-# /process
+# Process the queue
 
-Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe.
+Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which has loaded `fiu:guardrails` and called `whoami`; reuse both. If this session did not run `/start`, load `fiu:guardrails` and call `whoami` now, before anything else.
 
 ## 1. Gate
 
-Call `whoami`. If the connector is missing, say so and stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. Processing also needs a shell (Claude Code or Cowork) to fetch sources; without one, say so and stop.
+If the connector is missing, say so and stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. Processing also needs a shell (Claude Code or Cowork) to fetch sources; without one, say so and stop.
 
 ## 2. Agree the scope
 

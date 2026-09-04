@@ -1,10 +1,11 @@
 ---
-description: The rules for turning knowledge into FIU Brain atoms. Load this before calling submit_atoms, in /stop, in /process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
+description: The rules for turning knowledge into FIU Brain atoms. Load this before calling submit_atoms, in /stop, in fiu:process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
+user-invocable: false
 ---
 
 # Extraction rules
 
-Every atom in the brain is made with these rules. `/stop`, `/process` and every ingest load this same file and never restate it.
+Every atom in the brain is made with these rules. `/stop`, `fiu:process` and every ingest load this same file and never restate it.
 
 ## 1. The bar: does this deserve an atom?
 

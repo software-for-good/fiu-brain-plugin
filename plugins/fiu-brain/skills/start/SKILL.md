@@ -21,6 +21,13 @@ If this session cannot write files (chat, mobile), that is fine for questions, t
 
 Use `$ARGUMENTS` when given. Otherwise ask one short question about the goal, multiple choice where the options are clear. Do not fill the goal in yourself; an ambiguous instruction gets exactly one clarifying question.
 
+Two goals are founders' work and appear among the options only for accounts that may do them; a team account never sees them offered:
+
+- **Process the source queue**: turn ingested sources into atoms. Offer it when `whoami` reported the role `founder`; the server lets only founders mark a source processed. An argument of `process` selects it directly.
+- **Decide proposals**: work through the proposal backlog. Offer it when `whoami` reported `can_approve` true. An argument of `proposals` selects it directly.
+
+On either choice, load the matching skill (`fiu:process` or `fiu:process-proposals`) and follow it; its gate reuses this skill's `whoami` and the loaded guardrails. The hand-off replaces steps 4 to 6: those flows search the brain themselves and submit their own atoms, so no context pack is loaded and no `/stop` reminder applies.
+
 ## 4. Load context
 
 Derive candidate labels from the goal and check them with the `labels` tool; never guess a slug. Call `context_pack` once, goal written in English, labels attached. Read it silently: agreed atoms are company truth, observed atoms are facts about named entities, proposals are not yet true and you say so whenever you lean on one. For anything before September 2026 the brain holds then-latest truths, notable milestones and important transitions only; older intermediate states were deliberately not backfilled. A gap in the deep past means "not recorded", never "it did not happen". Tell the human in one line how fresh the brain is and whether it holds anything on their topic; when it holds nothing, say that plainly instead of filling the gap.

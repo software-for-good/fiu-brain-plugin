@@ -1,5 +1,6 @@
 ---
 description: The FIU quality bar for working with AI. Loaded by /start and applied for the whole session. In every FIU skill, "you" is the AI and "the human" is the person you work with.
+user-invocable: false
 ---
 
 # Guardrails

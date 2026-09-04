@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /stop
 
-You curate this session into the FIU Brain.
+You curate this session into the FIU Brain. If this session has not loaded `fiu:guardrails` (no `/start` ran), load it now.
 
 ## 1. Gate
 

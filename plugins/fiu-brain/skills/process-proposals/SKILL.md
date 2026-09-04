@@ -1,13 +1,15 @@
 ---
-description: Founders only. Work through the FIU Brain proposal backlog in one conversation, with the context to decide each one.
-disable-model-invocation: true
+description: Founders only. Work through the FIU Brain proposal backlog in one conversation, with the context to decide each one. Reached from /start when a founder chooses to decide proposals; not a session entry point of its own.
+user-invocable: false
 ---
 
-# /process-proposals
+# Process proposals
+
+This flow is reached from `/start`, which has loaded `fiu:guardrails` and called `whoami`; reuse both. If this session did not run `/start`, load `fiu:guardrails` and call `whoami` now, before anything else.
 
 ## 1. Gate
 
-Call `whoami`. If `can_approve` is false, say kindly that proposals are decided by founders, that everything else in the brain works as normal for this account, and stop.
+If the connector is missing, say so and stop. If `can_approve` is false, say kindly that proposals are decided by founders, that everything else in the brain works as normal for this account, and that `/start` offers the goals that fit; stop.
 
 If the approve and decline tools are not on the connector, say up front that the server side has not shipped yet and that this session can only prepare a decision list, then ask whether that is still wanted.
 
