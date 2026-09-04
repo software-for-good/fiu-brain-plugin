@@ -1,141 +1,138 @@
 ---
-description: The rules for turning knowledge into FIU Brain atoms. Load this before calling submit_atoms, in /stop, in fiu:process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
+description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop, in fiu:process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
 user-invocable: false
 ---
 
 # Extraction rules
 
-Every atom in the brain is made with these rules. `/stop`, `fiu:process` and every ingest load this same file and never restate it.
+Every atom in the brain is made with this funnel. `/stop`, `fiu:process` and every ingest run it per source and never restate it. Everything you write is English, whatever language the source spoke.
 
-## 1. What the brain holds
+## Who owns what
 
-Say what goes in before asking what stays out. The brain serves three uses, and every atom belongs to one of them.
+The brain is one of four systems and holds only what the other three cannot say.
 
-**Account management and sales: observed atoms.** Knowledge about a named client, partner, prospect or contact that the next conversation or the next deal turns on:
+| System | Owns | So |
+|---|---|---|
+| The FIU database: Nova, the registers, the dashboards | current state: which websites exist, contact details, subscriptions, orders, what is live now, the figures | never an atom; the story of how it got there is |
+| The codebase and the docs | how the product works, in full detail | an answer given to a real question is an atom; the docs re-typed are not |
+| The raws | the full text and every figure of a source | a colleague reads a raw when they must; an atom points at it instead of copying it |
+| The brain | meaning: what was agreed, planned, decided or explained, and why | that is what this funnel extracts |
 
-- agreements and agreed numbers: prices, commissions, budgets, volumes, deadlines, terms, with who agreed and when
-- their position, preference, objection or constraint
-- their plans and milestones, dated: a launch, a go-live, a campaign window, a postponement. "Chicks Love Food planned to launch its member environment CLF Club in mid-September 2026." That is a plan a colleague prepares for, not scheduling
-- the sales trail from first interest onward: who showed interest in what and when, what was offered at what price, accepted or rejected, and why. Nova holds subscriptions once they run; the funnel before that lives only here
-- who does what on their side: role, decision maker, a change of role
-- what is not arranged with them yet, when a colleague would act differently for knowing it, dated in the body; the atom that arranges it later supersedes it
-- a deliberate deviation from how FIU normally works for them, with the reason
-- why something with them failed, stalled or succeeded
-- an agreed action item, as observed: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling still is not
-- relationship colour the contact volunteered in a work setting and would expect a good account manager to remember: a holiday, a move, a new colleague, a preference for calls over mail
+Two kinds of atoms, named by scope. Scope is whom a claim is about; clearance (public, team, founders) is who may see it, and the two never mix.
 
-**Support: proposals on the service label.** How a service behaves, as it was explained to someone: the answer given to a real question, a known limitation, a gotcha, a workaround, what an integration needs from the other side, what a service is in one sentence. "During an Any to Basket trial a rate limit of one basket per minute applies" belongs here, even when one client hit it and even though the docs mention it: that a fact exists somewhere does not put it in a colleague's head. Support atoms come from questions actually asked and things learned the hard way, so the brain grows a real FAQ rather than a copy of the docs. They are proposals because they apply to everyone; a founder confirms them before they are repeated to clients.
+- `scoped`: about one to a few named external parties, carrying their labels. Live at once, because a wrong scoped atom does damage only inside that scope.
+- `company_wide`: applies to everyone: a service, a supermarket, a rule, the market, how FIU works. Enters as `proposed` and a founder approves it, because it becomes what FIU repeats to everyone.
 
-**Company knowledge: proposals.** How FIU works and what it does or does not do: pricing rules and policies, ways of working, definitions, decisions with who decided and why, market knowledge, notable firsts and milestones (dated and precise, so they never need correcting), important transitions (one atom for the change, old and new named in the body, dated at the change; the replaced state gets no atom of its own), and everything about supermarkets, whose arrangements apply to every client.
+## 1. Take the source
 
-**The bar.** One test, both halves must hold: would a colleague, a month from now, act or decide differently for knowing this, and does it stand alone, readable without the source by someone who was not there? That a fact is also in the docs, on the website, in the code or in a mail does not fail the bar.
+`/stop` hands you the session, `fiu:process` a fetched raw, an ingest its files. Read the source itself: for a meeting transcript the transcript body, never a generated summary at the top, because knowledge is never built on a derived layer. What the human told you is source too, not only what you produced.
 
-**Numbers.** An agreed number is always an atom. A measured number (traffic, saves, conversion, a share) is an atom only when someone used it to decide or to persuade, and then dated and attributed in the body: "On 1 September 2026 Rob told Lemone that FIU's traffic is 70 to 80 percent mobile." A source full of figures (a report, a table, a dashboard export) gets one atom that says what it is and points at the raw; the figures themselves stay in the raw, which colleagues can read when they must.
+## 2. Find what passes the bar
 
-**What stays out.** Three lists, from wide to narrow.
+Three conditions, all must hold, one candidate claim at a time.
 
-- For every atom: live register state the database owns and that changes under the brain's feet (which websites exist, contact details, subscriptions, orders, what is live now); a stray dashboard number; the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
-- For observed atoms about external contacts: nothing about health, nothing learned outside the work relationship, no judgments about the person. Everything else they volunteered is allowed when it helps the next conversation.
-- For company-wide atoms and for FIU's own people: strictly nothing personal, nothing HR (salary, performance, contracts, reviews). Skip it, quote nothing, and report that the source contained personal material.
+- A colleague, a month from now, acts or decides differently for knowing it.
+- It stands alone: readable without the source, by someone who was not there.
+- It is settled: it happened, was agreed, was decided, or it is a client's dated plan. A draft, an open question, a status that changes next week or a claim nobody owns is not knowledge yet; it goes in the report, and the decision it leads to becomes the atom.
 
-**Calibration** (never a target): a support or account thread 1 to 4 atoms, a multi-month thread up to 8, an hour of meeting 3 to 8, a strategy document 3 to 10, a working session 0 to 3. Zero is a normal outcome; say so and move on. Distrust repetition more than a count: thirty atoms that restate each other mean the bar slipped, and every weak atom taxes every future session that has to scan past it.
+That a fact is also in the docs, in the code, on the website or in a mail does not fail the bar. That a fact exists somewhere does not put it in a colleague's head.
 
-When in doubt, leave it out. A missing atom costs one question later. A wrong atom gets repeated as truth.
+- Yes: "Chicks Love Food planned to launch its member environment CLF Club in mid-September 2026." A client's dated plan; a colleague prepares for it.
+- No: "We speak again on Tuesday." The logistics of the conversation.
+- Yes: "During an Any to Basket trial a rate limit of one basket per minute applies." Explained to a partner who hit it; the docs mentioning it changes nothing.
+- No: "As of 31 August 2026 FIU is waiting on Flink's development status." Status that changes next week and that nobody decided.
+- No: "Zesty 2.0 is organised around arriving, staying and returning." A draft storyline for a session not yet held.
+- Yes: "FIU decided on 27 August 2026 not to attend Lemone's event of 22 September 2026, because winning and keeping creators needs no such event." A decision with its reason, whatever it is about.
 
-## 2. Shape
+Typical yield, never a target: a support or account thread 1 to 4 atoms, a multi-month thread up to 8, an hour of meeting 3 to 8, a strategy document 3 to 10, a working session 0 to 3. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave it out: a missing atom costs one question later, a wrong atom gets repeated as truth.
 
-- One claim per atom. A sentence joining two facts with "and" is two atoms.
-- The title is the claim as one full English sentence, specific enough to stand alone in a list of a thousand titles. "Heinz DE approved the Q4 2026 campaign on 26 August 2026.", not "Q4 proposal update". It ends with a period and stays under 200 characters.
-- The body states the claim in plain English, one idea per sentence, with only the context needed to act on it. Guideline 1,024 characters, hard maximum 2,048. Shorter is always better. If the body needs a second idea to make sense, that second idea is either its own atom or padding.
-- Same word for the same concept, every time. Service names exactly as the brain writes them. Spell out an abbreviation on first use in the body: "recipe to basket (R2B)".
-- Numbers and dates unambiguous: "10 percent of media budget", "26 August 2026". Never "last month" or "the usual fee".
-- State claims. Mark doubt explicitly in the text ("Heinz has not confirmed this").
-- No idiom, no metaphor, no marketing language. Everything in English, whatever language the source spoke.
+## 3. Split
 
-## 3. observed or proposal
+Split until a piece would stop reading on its own. One claim per atom: a sentence joining two facts with "and" or a semicolon is two atoms. One person per role atom. An action item and an absence are atoms of their own.
 
-Observed atoms go live without approval, so the lane is decided by scope, never by certainty:
+- One: "Chicks Love Food agreed to Any to Basket at 50 euro per month with a one-year minimum on 16 July 2026."
+- Another: "Chicks Love Food requires the Any to Basket contract to be cancellable monthly after the first year."
+- Not one: "Sophia Mather leads the FIU project at Flink and Sascha Nawrot is the tech counterpart." Two people, two atoms.
 
-- `observed`: the claim is about one to a few named external parties and carries their labels: `websites/`, `partner/`, `prospect/`, `person/`. At least one, expected one to three, never more than 15. The server refuses an observed atom outside that range and points at the proposal lane; apply the rule yourself before it has to.
-- `proposal`: everything else. Anything that applies to everyone or generalises: a service and how it behaves, a supermarket and what is arranged with it, a market, a trend, "German brands", a rule, how FIU works. Also anything that contradicts an existing agreed atom. A founder decides.
+## 4. Write
 
-A service or supermarket label never makes an atom observed, and a client label is not a vehicle for a general claim: "Lemone hit the one-basket-per-minute trial limit" is the rate limit in disguise. The rate limit is a proposal; what Lemone did is at most an observed footnote, if a colleague would act on it.
+- The title is the claim as one full English sentence, specific enough to stand alone in a list of a thousand titles, ending with a period, under 200 characters. "Heinz DE approved the Q4 2026 campaign on 26 August 2026.", not "Q4 proposal update".
+- The body states the claim in plain English, one idea per sentence, with only the context needed to act on it. Guideline 1,024 characters, hard maximum 2,048. If the body needs a second idea to make sense, that idea is its own atom or padding.
+- Who said it, in the body: "Heinz DE said ...", "Team assessment: ...", "The 2026 rate card states ...".
+- Dates and numbers unambiguous: "26 August 2026", "10 percent of media budget", never "last month" or "the usual fee". State claims; mark doubt in the text: "Heinz has not confirmed this."
+- The same word for the same concept, service names exactly as the brain writes them, an abbreviation spelled out on first use: "recipe to basket (R2B)". No idiom, no metaphor, no marketing language.
+- Numbers: an agreed number is always an atom. A measured number (traffic, saves, conversion, a share) is an atom only when someone used it to decide or to persuade, dated and attributed: "On 1 September 2026 Rob told Lemone that FIU's traffic is 70 to 80 percent mobile." A source full of figures gets one atom that says what the set shows and points at the raw; the figures that carry the argument get atoms of their own, the supporting ones stay in the raw.
+- An agreed action item: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling is not.
+- An absence that matters: "At the time of writing FIU has no pricing agreement with Jumbo.", dated in the body; the atom that arranges it later supersedes it.
+- A transition: one atom for the change, old and new named in the body, dated at the change; the replaced state gets no atom of its own. A milestone: exact date, specific fact, so it never needs correcting.
 
-"Heinz DE thinks our rates are high" is observed. "German brands find our rates high" is a proposal, however sure you are.
+## 5. Label
 
-A claim that contradicts an agreed atom becomes a proposal that states both values in the body and names the atom it contradicts. Never pick a side silently.
+Call the `labels` tool before assigning any label; never guess a slug. Label what the claim is about, not everything it mentions; one to six labels is normal. If no label fits, you probably have no atom.
 
-## 4. source_at
+| Cluster | Mode | Atoms with this label are for |
+|---|---|---|
+| `websites/`, `partner/`, `prospect/` | websites register-bound; partner and prospect free | the relationship with that party: agreements, positions, dated plans, the sales trail from first interest, roles on their side, deviations from how FIU normally works, what is not yet arranged, relationship colour |
+| `person/<email>` | free, external contacts only | the people in those relationships: who does what, what they said, what they want |
+| `service/` | register-bound: the group (`service/r2b`); the tier (`service/r2b-custom`) added only when the claim is about that tier, and then both | what the service is, how it behaves, its development and its history |
+| `supermarket/` | register-bound | what is arranged with a supermarket and how the integration works |
+| `business_unit/` | curated | how FIU works, per function: finance, accounts, sales, tech, legal, support, strategy, communication |
+| `theme/`, `type/`, `country/` | curated | facets for finding things: trends, competition, services, events; brand, agency, platform, influencer, supermarket; ISO country codes |
 
-The moment of the source: the mail, the meeting, the session. Never the moment of processing. Send it as ISO 8601 with the timezone offset; the server stores UTC and rejects future times. If a source from today says "last month Heinz said X", the atom carries today's source date and the body writes out the month. A source with no date gets the delivery time and "date unknown" in the body.
+- Register-bound values must match the tool's listing exactly. No match means no label; report the name so it can be added to the register.
+- Free labels reuse a listed value when one fits; a new one only when it is genuinely new. Competitors get `theme/competition` only, never a label of their own.
+- One claim touching several parties is one atom with several labels, never one atom per party.
 
-## 5. Labels
+## 6. Scope
 
-Call the `labels` tool before assigning any label. Never guess a slug from a name.
+Scope follows from the labels.
 
-- Register-bound (`websites/`, `service/`, `supermarket/`) must match the tool's listing exactly. No match means no label; report the name so it can be added to the register.
-- A service is labelled at group level: `service/r2b`, `service/a2b`. The tiers of one service hardly differ in what the brain knows about them, so the tier slug (`service/r2b-custom`) is added only when the claim is about that tier specifically and the distinction would change what a colleague does, and then the atom carries both, group and tier, so a search on the group finds everything.
-- Curated (`business_unit/`, `country/`, `theme/`, `type/`) come from the fixed lists the tool shows.
-- Free (`person/<email>`, `partner/`, `prospect/`) reuse a listed value when one fits; create a new one only when it is genuinely new.
-- Competitors get `theme/competition` only, never a label of their own.
+- The claim is about one to a few named external parties and carries their labels (`websites/`, `partner/`, `prospect/`, `person/`): `scoped`. At least one such label, expected one to three, never more than 15; the server refuses anything else and points at company-wide.
+- Anything else: `company_wide`. A service and how it behaves, a supermarket and what is arranged with it, a rule, a market, "German brands", how FIU works. Also anything that contradicts an existing company-wide atom; that atom states both values in the body and names the atom it contradicts, never picking a side silently.
 
-One claim touching several entities is ONE atom with several entity labels; never duplicate an atom per client. Label what the claim is about, not everything it mentions. One to six labels is normal; every observed atom carries one to 15 external-entity labels (section 3).
+One guard: a client label is never a vehicle for a general claim. "Lemone hit the one-basket-per-minute trial limit" is the rate limit in disguise; the rate limit is company-wide, and what Lemone did is at most a scoped footnote if a colleague would act on it. Scope is decided by whom the claim concerns, never by how sure you are: "Heinz DE thinks our rates are high" is scoped, "German brands find our rates high" is company-wide, however sure you are.
 
-## 6. Clearance
+## 7. Filter
 
-Omit the field and the server defaults to team, raised automatically to the floor of the sources and labels. Use `founders` only when the fact itself is founders-sensitive (deal terms under wraps, HR-adjacent business facts, acquisition interest); use `public` only for facts FIU would put on its website. The server enforces the floors: an atom can never sit below its sources or its labels, and never above your own clearance. A label above your clearance is simply unusable; if that surprises you, tell the human instead of retrying.
+The safety net after the bar. One line per case; if a candidate is not caught here and passed step 2, it stays.
 
-## 7. Attribution
+- Always out: current state the database owns; a dashboard figure nobody used; the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
+- `person/`: nothing about health, nothing learned outside the work relationship, no judgments about the person. What they volunteered at work and would expect a good account manager to remember stays.
+- `websites/`, `partner/`, `prospect/`: no scheduling of the conversation. A client's dated plan is not scheduling and stays.
+- `service/`: only what was explained to someone or learned the hard way. The docs re-typed are out.
+- `business_unit/`, and anything about FIU's own people: nothing personal, nothing HR: salary, performance, contracts, reviews. Skip it, quote nothing, and report that the source contained personal material.
 
-Write who said it, in the body:
+## 8. Compare with the brain
 
-- client or partner conversation: "Heinz DE said ..."
-- internal meeting: "Team assessment: ..."
-- a document: "The 2026 rate card states ..."
+Check the context pack and `search` each candidate's entity labels before it enters the list. The server bounces exact duplicates with a pointer; everything reworded is your judgement, so look first. Four outcomes.
 
-## 8. Do not repeat the brain
+- New: keep it.
+- Duplicate: drop it.
+- Covered: the candidate is an older value of something a newer atom already answers. Drop it, count it, and ask once whether the change between then and now itself passes the bar. Usually not. When it does, a deliberate and reasoned shift in how FIU or a client works, the change becomes one transition atom. The brain holds "FIU prices campaigns as a percentage of media budget" (2025) and a 2022 mail prices a campaign at 450 euro per post: the 450 euro atom is never made, and if the sources show the switch was a real 2023 decision, the atom is "In 2023 FIU moved campaign pricing from a fee per post to a percentage of media budget", the old fee in the body. Events, decisions and reasons are never covered merely by being old.
+- Conflict: sources of the same age disagree. One company-wide atom stating both values.
 
-Check the context pack and `search` before submitting. The server bounces exact duplicates (same title and content) with a pointer; everything reworded is your judgement, so look first.
+A correction or a newer truth is a new atom with `supersedes` set to the old filename. The server enforces: same clearance, target still live and head of its chain, strictly earlier source time, scoped over scoped. A company-wide correction records the intent and swaps at approval. An older fact that would correct a newer atom goes in as company-wide with "backfill" in the body.
 
-A correction or a newer truth is a new atom with `supersedes` set to the old filename. The server enforces: same clearance, target still live and head of its chain, strictly earlier source time, observed only over observed. A proposal with `supersedes` records intent; the swap happens at approval. If your new fact is older than the atom it would replace, submit it as a proposal with "backfill" in the body.
+Read server errors, fix the atom, resubmit only the failures. Never resubmit anything unchanged, and never resubmit a claim that was declined; the error carries the reason.
 
-Read server errors, fix the atom, resubmit only the failures. Never resubmit anything unchanged, and never re-propose a claim that was declined; the error carries the reason.
+## 9. Clearance and date
 
-## 9. The submit contract
+- Clearance: omit the field and the server defaults to team, raised to the floor of the sources and labels. `founders` only when the fact itself is founders-sensitive: deal terms under wraps, HR-adjacent business facts, acquisition interest. `public` only for facts FIU would put on its website. An atom never sits below its sources or its labels, nor above your own clearance; a label above your clearance is unusable, and if that surprises you, tell the human instead of retrying.
+- `source_at`: the moment of the source, the mail, the meeting, the session, never the moment of processing. ISO 8601 with the timezone offset; the server stores UTC and rejects future times. A source from today that says "last month Heinz said X" carries today's date, and the body writes out the month. A source with no date gets the delivery time and "date unknown" in the body.
 
-`submit_atoms` takes a list of atoms; each atom is validated on its own and the result says per atom what happened. Fields:
+## The submit contract
+
+`submit_atoms` takes a list of atoms; each is validated on its own and the result says per atom what happened.
 
 | field | meaning |
 |---|---|
 | `title` | the claim, one English sentence, max 200 chars |
 | `content` | the claim in plain English, guideline 1,024, max 2,048 |
-| `kind` | `observed` or `proposal` |
+| `kind` | `scoped` or `company_wide` |
 | `labels` | slugs from the `labels` tool |
 | `sources` | ids of raws this came from, when processing raws |
 | `source_at` | ISO 8601 moment of the source |
 | `clearance` | omit for team; `founders` or `public` deliberately |
 | `supersedes` | filename of the atom this corrects |
 
-The markdown frontmatter people see in exports is rendered by the server from these fields; you never write frontmatter yourself.
-
-## 10. Worked example
-
-Source, client call, 26 August 2026: "Anna van Heinz zei dat ze de Q4 aanvraag goedkeuren maar dat het budget van 60k naar 45k gaat omdat Duitsland is gekort. Ze wil de creators eerder zien dan vorig jaar. We spreken elkaar dinsdag weer."
-
-Three atoms, labels `websites/heinz-de` and `person/anna@heinz.com`:
-
-1. "Heinz DE approved the Q4 2026 campaign on 26 August 2026." (observed)
-2. "Heinz DE reduced the Q4 2026 campaign budget from 60,000 to 45,000 euro because the German budget was cut." (observed)
-3. "Heinz DE wants to see the creator selection earlier in the process than in 2025." (observed)
-
-Not an atom: the next appointment. That is scheduling.
-
-An atom, had Anna said it: "Heinz DE launches its new recipe site on 15 October 2026." A client's launch date is a plan a colleague prepares for, not scheduling.
-
-From the same week, all proposals because they apply to everyone: "During an Any to Basket trial a rate limit of one basket per minute applies." "FIU has no telephone customer service." "Flink shows a buy button only when its own share of a recipe's ingredients is available."
-
-Wrong, as observed: "Lemone hit the one-basket-per-minute trial rate limit." A general rule wearing a client label; the rate limit is a proposal.
-
-Wrong: "Heinz DE approved Q4, cut the budget and wants creators earlier." Three claims in one.
-Wrong: "Q4 update Heinz." Not a claim.
-Wrong, as observed: "Brands are cutting German budgets in 2026." It generalises: proposal or nothing.
+The frontmatter people see in exports is rendered by the server from these fields; you never write it.

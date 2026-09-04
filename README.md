@@ -9,7 +9,7 @@ every session because both clients keep the plugin in sync:
 
 One plugin for everyone, two session commands: `/fiu:start` opens every session and `/fiu:stop` closes it.
 `/fiu:start` takes the role from `whoami` and offers only the goals that fit it; founders additionally get
-"process the source queue" and "decide proposals", which hand off to the `process` and `process-proposals`
+"process the source queue" and "approve company-wide atoms", which hand off to the `process` and `process-proposals`
 skills. Those two, like `guardrails` and `extraction-rules`, carry `user-invocable: false`: hidden from the
 command menu and not runnable by hand, loadable only by the AI, so every path starts with the guardrails and
 the identity check in place. This is convenience, not security: the server checks each token's role and

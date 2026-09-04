@@ -19,13 +19,13 @@ Ask two things in one message: which scope (one source type, or the whole queue)
 
 Load `fiu:extraction-rules` once, before the first fetch: you read every source with its bar in mind, and its yield expectations decide how much of a source is worth reading at all. Then `list_raws` for the scope; it returns each source's id and the endpoint template. Fetch a source into a local file by curling the `endpoint` URL the listing returned, `{id}` filled in, sending the same bearer token the connector uses (it sits in the session's MCP config; in Claude Code, `claude mcp get fiu-brain`). Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time: fetch, read and extract it before touching the next. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
 
-If a source turns out personal or private: extract nothing, quote nothing, still mark it processed like any finished source so it stops resurfacing in the queue, and flag it in the report so Rob can remove the raw itself; that removal is a manual operation on purpose.
+If a source turns out personal or private: extract nothing, quote nothing, still mark it processed like any finished source so it stops resurfacing in the queue, and flag it in the report so Rob can remove the raw itself; that removal is a manual operation on purpose. A source that contains a credential (a bearer token, a password) is flagged the same way, for rotation and for removal from the raw.
 
 ## 4. Extract
 
 Apply the extraction rules per source, `sources` set to the raw's id on every atom. Zero atoms is a normal outcome; say so and move on.
 
-Before a candidate enters the round's list, `search` its entity labels. Four outcomes. New: keep it. Duplicate: drop it. Covered: the candidate is an older value of something a newer atom already answers; drop it, count it, and ask yourself one question before moving on: does the change between then and now itself pass the bar? Usually not. When it does (a deliberate, reasoned shift in how FIU or a client works), the change becomes one atom, old and new named in the body, the moment of the change written out. Example: the brain holds "FIU prices campaigns as a percentage of media budget" (2025) and a 2022 mail prices a campaign at 450 euro per post. The 450 euro atom is never made; if the sources show the switch was a real 2023 decision, the atom is "In 2023 FIU moved campaign pricing from a fee per post to a percentage of media budget", with the old 450 euro fee in the body. Most transitions surface naturally anyway: because processing runs newest first, the source that announced a change is processed before the sources living under the old regime; the covered check is the net for changes no surviving source announced. Conflict: two sources disagree and neither is clearly the newer truth; a proposal stating both values, per the rules. Events, decisions and reasons are never covered merely by being old. `supersedes` runs forward only, and stays in play: an atom from a newer source supersedes an older atom already in the brain; an older fact that would correct a newer atom is the rules' backfill-proposal case.
+Run the funnel's compare step (extraction rules, step 8) on every candidate before it enters the round's list: new, duplicate, covered or conflict. Newest first makes most transitions surface naturally, because the source that announced a change is processed before the sources living under the old regime; the covered check is the net for changes no surviving source announced. Count covered drops and keep one-line examples for the report, so over-firing shows early.
 
 ## 5. Verify the round
 
@@ -33,11 +33,15 @@ When the FIU codebase is among the session's working folders, verify the round b
 
 ## 6. Confirm, per round
 
+Before showing the list, split every title that joins two facts with "and" or a semicolon: one claim per atom, one person per role atom.
+
 Show the round's atoms as one compact numbered list grouped by source: title, kind, labels, and the verification note where one exists; zero-yield sources as one line for all of them together (count plus their ids). The human confirms, corrects or skips by number; do not walk through source by source and do not summarise sources back at them. The titles are the summary.
 
 ## 7. Submit and mark
 
 `submit_atoms`, fix rejections, resubmit only those. Per source in the round, call `mark_raw_processed` once that source's atoms were accepted, or straight away when it has nothing to submit (zero candidates, everything dropped as duplicate or covered, personal). A source is marked exactly when it needs no more work, so an interrupted run resumes cleanly instead of losing or duplicating work.
+
+Submit and mark every round before moving on: a source left unmarked is redone from scratch next run, and the corrections made on it are lost with it.
 
 ## 8. Report and continue
 
