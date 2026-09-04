@@ -9,14 +9,14 @@ Every atom in the brain is made with this funnel. `/stop`, `fiu:process` and eve
 
 ## Who owns what
 
-The brain is one of four systems. It holds only what the other three cannot say.
+The brain is one of four systems. Each system owns its own kind of knowledge, and the brain holds only its own kind: meaning, and the answers people actually ask for. One principle settles every overlap with the docs and the code: a question asked is the ticket in.
 
 | System | What it owns | What that means for atoms |
 |---|---|---|
 | The FIU database: Nova, the registers, the dashboards | The current state: which websites exist, contact details, subscriptions, orders, what is live now, and the figures. | A current value is never an atom. The story of how that value came about (who agreed it, when, and why) is an atom. |
-| The codebase and the docs | How the product works, in full detail. | The question a person actually asked, together with its answer, is an atom, even when the docs answer it too, because the docs are not in the session and the question is on people's minds. Documentation copied without anyone having asked is not an atom. |
+| The codebase and the docs | The complete reference for how the product works. | The brain never copies that reference. It holds the asked subset: a question that a colleague, a partner or a client actually asked, with the answer they got, is an atom, because the question proves the knowledge is needed in sessions and the docs are not in the session. Documentation copied without anyone having asked is not an atom. |
 | The raws | The full text and every figure of a source. | A colleague reads a raw when they must. An atom points at a raw instead of copying it. |
-| The brain | Meaning: what was agreed, planned, decided or explained, and why. | This funnel extracts that meaning. |
+| The brain | Meaning: what was agreed, planned, decided or explained, and why; and the answers to the questions people actually ask. | This funnel extracts that meaning. |
 
 ## Atom scope
 
@@ -51,7 +51,7 @@ Test one candidate claim at a time. All three conditions must hold.
 - The claim stands alone: someone who was not there can read it without the source.
 - The claim is settled: it happened, it was agreed, it was decided, or it is a client's dated plan. A draft, an open question, a status that changes next week or a claim that nobody owns is not knowledge yet. Such a candidate goes in the report, and the decision it leads to becomes the atom later.
 
-A fact that also exists in the docs, in the code, on the website or in a mail still passes the bar. That a fact exists somewhere does not put it in a colleague's head.
+Whether a fact also stands in the docs, in the code, on the website or in a mail does not decide the bar; the three conditions do. For knowledge about the product, a question asked is the ticket in: the docs are the complete reference, and the brain holds the part people actually ask about.
 
 - Passes: "Chicks Love Food planned to launch its member environment CLF Club in mid-September 2026." A client's dated plan is something a colleague prepares for.
 - Fails: "We speak again on Tuesday." That is the logistics of the conversation.
@@ -112,7 +112,7 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 - Always out: a current value the database owns; a dashboard figure that nobody used; the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
 - `person/`: nothing about health, nothing learned outside the work relationship, no judgments about the person. What a contact volunteered at work and would expect a good account manager to remember stays.
 - `websites/`, `partner/`, `prospect/`: no scheduling of the conversation. A client's dated plan is not scheduling and stays.
-- `service/`: a question that a colleague, a partner or a client actually had, and its answer, stays, whether or not the docs answer it. Documentation copied without anyone having asked is out.
+- `service/`: a question that a colleague, a partner or a client actually asked, with its answer, stays; a question asked is the ticket in. Documentation copied without anyone having asked is out.
 - `business_unit/`, and anything about FIU's own people: nothing personal, nothing HR: salary, performance, contracts, reviews. Skip it, quote nothing, and report that the source contained personal material.
 
 ## 8. Compare with the brain
