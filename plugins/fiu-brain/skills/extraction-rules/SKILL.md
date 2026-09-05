@@ -87,7 +87,7 @@ Call the `labels` tool before assigning any label; never guess a slug. Label wha
 |---|---|---|
 | `websites/`, `partner/`, `prospect/` | Websites are register-bound; partners and prospects are free labels. | The relationship with that party: agreements, positions, dated plans, the sales trail from first interest onward, roles on their side, deviations from how FIU normally works, what is not yet arranged, relationship colour. |
 | `person/<email>` | Free, for external contacts only. | The people in those relationships: who does what, what they said, what they want. |
-| `service/` | Register-bound. Use the group slug (`service/r2b`). Add the tier slug (`service/r2b-custom`) only when the claim is about that tier, and then carry both. | What the service is, how it behaves, the questions people ask about it, its development and its history. |
+| `service/` | Register-bound. Use the group slug (`service/r2b`). Add the tier slug (`service/r2b-custom`) only when the claim is about that tier, and then carry both. | What the service is, how it behaves, the questions people ask about it, its development and its history. When a source names a family rather than one service (branded ingredients, the brand hub), label every service in that family; the labels tool lists the families. |
 | `supermarket/` | Register-bound. | What is arranged with a supermarket and how the integration works. |
 | `business_unit/` | Curated. | How FIU works, per business unit: how finance invoices a client, how legal handles a contract, how support answers a partner. |
 | `theme/`, `type/`, `country/` | Curated. | Facets for finding things: the theme of a claim, the type of party it concerns, the country it applies to. |
