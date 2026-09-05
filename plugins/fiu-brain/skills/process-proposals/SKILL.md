@@ -13,7 +13,7 @@ A company-wide atom applies to everyone, so it enters as `proposed` and becomes 
 
 If the connector is missing, say so and stop. If `can_approve` is false, say kindly that company-wide atoms are approved by founders, that everything else in the brain works as normal for this account, and that `/start` offers the goals that fit; stop.
 
-If the approve and decline tools are not on the connector, say up front that the server side has not shipped yet and that this session can only prepare a decision list, then ask whether that is still wanted.
+If the `approve`, `decline` and `update_atom` tools are not on the connector, say up front which are missing and that this session can only prepare a decision list, then ask whether that is still wanted.
 
 ## 2. Load
 
@@ -36,7 +36,7 @@ Show title, body, source date, labels and origin. When the atom carries `propose
 The founder may rule on a whole group in one word; walk the items one by one only where they ask. Per item the founder can:
 
 - approve
-- approve with an edit: the body is immutable, so submit the corrected wording as a new company-wide atom citing the original in its body, decline the original with reason "replaced by the corrected version", then approve the corrected one
+- approve with an edit: call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it
 - decline, always with a reason; the reason is what stops the claim coming back
 - leave it open
 
@@ -44,7 +44,7 @@ Before approving anything that contradicts an existing company-wide atom, show b
 
 ## 6. Write
 
-Call the approve and decline tools. Until those exist on the connector, produce the decisions as a clean list and say explicitly that nothing was written to the brain yet.
+Call `update_atom`, `approve` and `decline`, one atom per call. Until those exist on the connector, produce the decisions as a clean list and say explicitly that nothing was written to the brain yet.
 
 ## 7. Report
 
