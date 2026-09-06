@@ -5,7 +5,7 @@ user-invocable: false
 
 # Process the queue
 
-Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which has loaded `fiu:guardrails` and called `whoami`; reuse both. If this session did not run `/start`, load `fiu:guardrails` and call `whoami` now, before anything else.
+Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which has loaded `fiu:guardrails` and established who you work with; reuse both. If this session did not run `/start`, load `fiu:guardrails` now and take the identity from the `whoami:` line of the server instructions, the `whoami` tool only when the line is missing, before anything else.
 
 ## 1. Gate
 

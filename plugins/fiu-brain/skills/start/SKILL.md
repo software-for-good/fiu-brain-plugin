@@ -7,9 +7,11 @@ disable-model-invocation: true
 
 You open a session on the FIU Brain. You are a colleague who knows the company history, not a form. Load `fiu:guardrails` and apply it for the whole session.
 
+Steps 1 to 3 are the ritual before the work, and they make at most two tool calls: the guardrails load and, only when step 1 needs it, the `whoami` tool. No `status`, no `list_raws`, no `search`, no `context_pack`, no file reads, and no sentence to the human before the question of step 3: the first thing the human reads is that question. Everything the brain holds is read after the goal is known, in step 4.
+
 ## 1. Identify
 
-Call `whoami`. If the tool is not available, tell the human the FIU Brain connector is not connected (Settings, Connectors, or `claude mcp add` with their personal token) and stop. Take the name, role and clearance from the answer; never ask the human who they are.
+The FIU Brain server hands its instructions to every session at connect, and for a connected account they end with a `whoami:` line: name, slug, role, clearance, `can_write`, `can_approve`. Read it from the server instructions in your context; it is the same payload the `whoami` tool returns. Call the `whoami` tool only when the instructions carry no such line. If neither the line nor the tool is available, tell the human the FIU Brain connector is not connected (Settings, Connectors, or `claude mcp add` with their personal token) and stop. Never ask the human who they are.
 
 ## 2. Establish where we are working
 
@@ -19,18 +21,20 @@ If this session cannot write files (chat, mobile), that is fine for questions, t
 
 ## 3. Establish the goal
 
-Use `$ARGUMENTS` when given. Otherwise ask one short question about the goal, multiple choice where the options are clear. Do not fill the goal in yourself; an ambiguous instruction gets exactly one clarifying question.
+Use `$ARGUMENTS` when given. Otherwise ask one single-select question and nothing before it. The question is `<name>, <role>. What is this session for?`, name and role from step 1. The options are exactly these, in this order, each with its one-line description, and nothing of your own; the question tool adds "Other" by itself:
 
-Two goals are founders' work and appear among the options only for accounts that may do them; a team account never sees them offered:
+1. **Process the source queue**: turn ingested sources into atoms. Only when the role is `founder`; the server lets only founders mark a source processed.
+2. **Approve company-wide atoms**: decide the proposed company-wide atoms. Only when `can_approve` is true.
+3. **Prepare a client meeting**: pull what the brain holds on a client, then think it through together.
+4. **Ask the brain**: what do we know about a client, a person, a service, a topic.
 
-- **Process the source queue**: turn ingested sources into atoms. Offer it when `whoami` reported the role `founder`; the server lets only founders mark a source processed. An argument of `process` selects it directly.
-- **Approve company-wide atoms**: work through the proposed company-wide atoms. Offer it when `whoami` reported `can_approve` true. An argument of `approve` selects it directly.
+A team account sees options 3 and 4 only. "Other" or a typed line is the goal as given; an ambiguous one gets exactly one clarifying question. Do not fill the goal in yourself. Arguments of `process` and `approve` select options 1 and 2 directly, under the same conditions.
 
-On either choice, load the matching skill (`fiu:process` or `fiu:process-proposals`) and follow it; its gate reuses this skill's `whoami` and the loaded guardrails. The hand-off replaces steps 4 to 6: those flows search the brain themselves and submit their own atoms, so no context pack is loaded and no `/stop` reminder applies.
+On option 1 or 2, load the matching skill (`fiu:process` or `fiu:process-proposals`) and follow it; its gate reuses this skill's identity and the loaded guardrails. The hand-off replaces steps 4 to 6: those flows search the brain themselves and submit their own atoms, so no context pack is loaded and no `/stop` reminder applies.
 
 ## 4. Load context
 
-Derive candidate labels from the goal and check them with the `labels` tool; never guess a slug. Call `context_pack` once, goal written in English, labels attached. Read it silently: company-wide atoms are company truth, scoped atoms are facts about one to a few named external parties, proposed atoms are not yet true and you say so whenever you lean on one. For anything before September 2026 the brain holds then-latest truths, notable milestones and important transitions only; older intermediate states were deliberately not backfilled. A gap in the deep past means "not recorded", never "it did not happen". Tell the human in one line how fresh the brain is and whether it holds anything on their topic; when it holds nothing, say that plainly instead of filling the gap.
+Only now, with the goal known. Derive candidate labels from the goal and check them with the `labels` tool; never guess a slug. Call `context_pack` once, goal written in English, labels attached. Read it silently: company-wide atoms are company truth, scoped atoms are facts about one to a few named external parties, proposed atoms are not yet true and you say so whenever you lean on one. For anything before September 2026 the brain holds then-latest truths, notable milestones and important transitions only; older intermediate states were deliberately not backfilled. A gap in the deep past means "not recorded", never "it did not happen". Tell the human in one line how fresh the brain is and whether it holds anything on their topic; this is the only place that line belongs. When it holds nothing, say that plainly instead of filling the gap.
 
 ## 5. Work
 
