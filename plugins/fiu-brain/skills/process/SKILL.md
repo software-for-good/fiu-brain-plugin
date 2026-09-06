@@ -29,12 +29,16 @@ Run the funnel's compare step (extraction rules, step 8) on every candidate befo
 
 ## 5. Confirm, per round
 
-Before showing the round, apply the two-claim test to every title: if the title splits into two sentences that each pass the bar, it is two atoms, whatever word joined them. One person per role atom.
+Before showing the round, apply the two-claim test to every title: if the title splits into two sentences that each pass the bar, it is two atoms, whatever word joined them. One person per role atom. Show such a split pre-split, as two numbered rows, and say in the note of the second row that the two can be merged back; the human then merges by number instead of reconstructing your reasoning.
 
 Present the round as tables, never as prose or a plain list.
 
-- One table per source, with the source's citation above it. Columns: number, claim (the title), kind, labels, note (a doubt, or a source detail the human needs to judge). Claims about how the product works are not checked against the code here; that happens when a founder approves them. Sources that yielded nothing are one line under the tables, together, with their count and ids.
+- One table per source, with the source's citation above it. Columns: number, claim (the title), kind, labels, note (a doubt, or a source detail the human needs to judge). Claims about how the product works are not checked against the code here; that happens when a founder approves them.
+- Number the claims continuously across all the source tables of the round, so the human can answer "2 drop, 17 prospect" without naming a source.
+- Sources that yielded nothing get one sentence together under the tables, with their citations and ids. A table with no rows says less than a sentence does.
 - One table for everything that did not make it. Columns: candidate, reason. The reason names the funnel step: failed the bar and which condition, filtered and which line, covered, duplicate, conflict. Nothing is dropped silently.
+- The note column is where your judgement surfaces. Use it for a label you could argue either way, for the atom you would cut first if the human cuts one, and for a claim that only just passed the bar. A round in which every note is empty is a round that hid its doubts.
+- Close with two or three sentences under the drop table: the covered drops as a fraction of all candidates, so over-firing shows early, and anything the human must know before confirming, such as a source flagged for removal.
 
 The human confirms, corrects or skips by number. Do not walk through source by source and do not summarise sources back at them; the claims are the summary.
 
@@ -46,4 +50,4 @@ Submit and mark every round before moving on: a source left unmarked is redone f
 
 ## 7. Report and continue
 
-Per round, one table with one row per measure: sources processed, atoms accepted, atoms rejected with their reasons, candidates dropped per reason with counts (covered drops with one-line examples, so over-firing shows early), sources flagged for removal (personal material, a credential), sources left in scope. Then ask whether to continue with the next batch; stop when the human stops.
+Per round, one table with one row per measure: sources processed, atoms accepted, atoms rejected with their reasons, what the human dropped or corrected in the confirm step, candidates dropped per reason with counts (covered drops with one-line examples, so over-firing shows early), sources flagged for removal (personal material, a credential), sources left in scope. Name under the table every free label (`person/`, `partner/`, `prospect/`) that was created on first use this round, so the vocabulary never grows unnoticed. Then ask whether to continue with the next batch; stop when the human stops.
