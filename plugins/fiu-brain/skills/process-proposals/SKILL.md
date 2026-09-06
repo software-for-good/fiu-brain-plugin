@@ -23,20 +23,28 @@ If the `approve`, `decline` and `update_atom` tools are not on the connector, sa
 
 Proposed atoms about how the product or the tech works (what a feature does, how an integration behaves, a limit, a rule the software applies) are checked against the FIU codebase before a founder approves them; the process flow does not check them, because approval is where company truth is minted and where a founder with code access is present.
 
-- When the FIU codebase is among the session's working folders, send an agent over those atoms and mark each one verified, contradicted or not checkable. Show the founder what the code says next to each claim. A contradicted claim is approved with an edit or declined, never approved as it stands.
+- When the FIU codebase is among the session's working folders, send an agent over those atoms and mark each one verified, contradicted or not checkable. The verdict and what the code says go into the code check column of the tables in step 4, next to the claim. A contradicted claim is approved with an edit or declined, never approved as it stands.
 - When the codebase is not available, say so once and ask whether the founder wants to add it before deciding. If they cannot or will not, leave the product claims open and continue with the rest; they wait for a founder who has code access.
 - Never approve a product claim that was neither verified nor explicitly waived by the founder.
 
-## 4. Context per atom
+## 4. Present
 
-Show title, body, source date, labels and origin. When the atom carries `proposes_to_supersede`, `get` the target and show both claims side by side. When one `search` on the title's key terms surfaces directly related atoms, mention them in one line; do not go hunting further.
+Present the queue as tables, never as prose or a plain list. The tables are the decision screen: complete beats short here, whatever the guardrails say about length elsewhere.
+
+- One table per label group, the group's label above it. Columns: number, claim (the title), labels, origin (source date, source filename, who created it), code check, note.
+- Number the atoms continuously across all the group tables, so the founder can answer "1 to 4 approve, 9 decline, 12 open" without naming a group.
+- The code check column holds the verdict of step 3 (verified, contradicted, partly verified, not checkable, or a dash for a claim that is not about the product) and one sentence of what the code says, with a file reference the founder can open. A contradicted or partly verified row says in the same cell what the edit or the decline would be.
+- The note column is where your judgement surfaces: the recommended decision, the doubt behind it, the row you would decline first, a clearance that could be lowered, a directly related live atom in half a sentence (one `search` on the title's key terms; do not go hunting further), a body that says more than its title. A table in which every note is empty is a table that hid its doubts.
+- Bodies live under the table, not in it; a body in a cell squeezes every other column to nothing. Under each group's table, give in full and by number the body of every row the founder must read to decide: a recommended edit (current body and proposed replacement, both in full), a contradiction, a supersession. Say once under the tables that the other bodies are available by number.
+- When an atom carries `proposes_to_supersede`, `get` the target and show both as two numbered rows under the table, the proposed one first, so the founder sees what changes.
+- Close with two or three sentences under the tables: how many proposals, how many are product claims and how the verdicts fell, and anything that blocks a decision, such as the codebase not being available or a contradiction with a live atom.
 
 ## 5. Decide, per group
 
-The founder may rule on a whole group in one word; walk the items one by one only where they ask. Per item the founder can:
+The founder rules by number or by group, in one word where they can; walk the items one by one only where they ask. Do not walk group by group and do not summarise atoms back at them; the claims are the summary. Per item the founder can:
 
 - approve
-- approve with an edit: call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it
+- approve with an edit: show the corrected title or body in full first, because the founder approves wording, not intention; then call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it
 - decline, always with a reason; the reason is what stops the claim coming back
 - leave it open
 
