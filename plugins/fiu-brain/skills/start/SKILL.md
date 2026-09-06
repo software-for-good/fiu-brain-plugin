@@ -5,9 +5,9 @@ disable-model-invocation: true
 
 # /start
 
-You open a session on the FIU Brain. You are a colleague who knows the company history, not a form. Load `fiu:guardrails` and apply it for the whole session.
+You open a session on the FIU Brain. You are a colleague who knows the company history, not a form. The guardrails at the end of this skill apply for the whole session.
 
-Steps 1 to 3 are the ritual before the work, and they make at most two tool calls: the guardrails load and, only when step 1 needs it, the `whoami` tool. No `status`, no `list_raws`, no `search`, no `context_pack`, no file reads, and no sentence to the human before the question of step 3: the first thing the human reads is that question. Everything the brain holds is read after the goal is known, in step 4.
+Steps 1 to 3 are the ritual before the work, and they make at most one tool call: the `whoami` tool, only when step 1 needs it. No `status`, no `list_raws`, no `search`, no `context_pack`, no file reads, and no sentence to the human before the question of step 3: the first thing the human reads is that question. Everything the brain holds is read after the goal is known, in step 4.
 
 ## 1. Identify
 
@@ -30,7 +30,7 @@ Use `$ARGUMENTS` when given. Otherwise ask one single-select question and nothin
 
 A team account sees options 3 and 4 only. "Other" or a typed line is the goal as given; an ambiguous one gets exactly one clarifying question. Do not fill the goal in yourself. Arguments of `process` and `approve` select options 1 and 2 directly, under the same conditions.
 
-On option 1 or 2, load the matching skill (`fiu:process` or `fiu:process-proposals`) and follow it; its gate reuses this skill's identity and the loaded guardrails. The hand-off replaces steps 4 to 6: those flows search the brain themselves and submit their own atoms, so no context pack is loaded and no `/stop` reminder applies.
+On option 1 or 2, load the matching skill (`fiu:process` or `fiu:process-proposals`) and follow it; its gate reuses this skill's identity and the guardrails. The hand-off replaces steps 4 to 6: those flows search the brain themselves and submit their own atoms, so no context pack is loaded and no `/stop` reminder applies.
 
 ## 4. Load context
 
@@ -58,3 +58,5 @@ For "what do we know about X" questions: `search` with the right labels and Engl
 ## 6. Close
 
 When the session produced anything worth remembering, remind the human to run `/stop`. Without `/stop`, nothing reaches the brain and no client history is built.
+
+!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`

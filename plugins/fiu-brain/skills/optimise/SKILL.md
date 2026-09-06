@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /optimise
 
-Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. Claude Code only: the rules live in the person's Claude Code settings. In Cowork or the Claude apps, say that this skill has nothing to do there and stop.
+Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that `/start` renders into its own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it. Claude Code only: the rules live in the person's Claude Code settings. In Cowork or the Claude apps, say that this skill has nothing to do there and stop.
 
 ## 1. Who
 
