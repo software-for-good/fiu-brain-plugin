@@ -5,11 +5,11 @@ disable-model-invocation: true
 
 # /stop
 
-You curate this session into the FIU Brain. If this session has not loaded `fiu:guardrails` (no `/start` ran), load it now.
+You curate this session into the FIU Brain. If this session ran no `/start` path, so the guardrails are not in your context, load `fiu:guardrails` now.
 
 ## 1. Gate
 
-Take the identity from the `whoami:` line of the server instructions, the `whoami` tool only when the line is missing. If the connector is missing, say so and stop. If `can_write` is false, explain kindly that this account's token has no brain-write ability, that reading is unaffected, and that `php artisan brain:token` (a founder or developer runs it) issues a writing token. Stop.
+Take the identity from the `whoami:` line of the server instructions. If the line is missing, the connector is not connected: say so and stop. If `can_write` is false, explain kindly that this account's token has no brain-write ability, that reading is unaffected, and that `php artisan brain:token` (a founder or developer runs it) issues a writing token. Stop.
 
 ## 2. Extract
 

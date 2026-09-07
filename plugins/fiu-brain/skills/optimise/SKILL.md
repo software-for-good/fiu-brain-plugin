@@ -5,11 +5,11 @@ disable-model-invocation: true
 
 # /optimise
 
-Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that `/start` renders into its own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it. Claude Code only: the rules live in the person's Claude Code settings. In Cowork or the Claude apps, say that this skill has nothing to do there and stop.
+Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that the path skills render into their own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it. Claude Code only: the rules live in the person's Claude Code settings. In Cowork or the Claude apps, say that this skill has nothing to do there and stop.
 
 ## 1. Who
 
-Take the identity from the `whoami:` line of the server instructions, the `whoami` tool only when the line is missing, as `/start` does. If the connector is missing, say so and stop.
+Take the identity from the `whoami:` line of the server instructions, as `/start` does. If the line is missing, the connector is not connected: say so and stop.
 
 ## 2. The rules this account earns
 

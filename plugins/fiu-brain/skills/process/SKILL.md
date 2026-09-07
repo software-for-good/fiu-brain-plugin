@@ -5,7 +5,7 @@ user-invocable: false
 
 # Process the queue
 
-Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which has loaded `fiu:guardrails` and established who you work with; reuse both. If this session did not run `/start`, load `fiu:guardrails` now and take the identity from the `whoami:` line of the server instructions, the `whoami` tool only when the line is missing, before anything else.
+Ingest put sources in; you put knowledge in. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which established who you work with; reuse it. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions before anything else. The guardrails at the end of this skill apply for the whole session.
 
 ## 1. Gate
 
@@ -51,3 +51,5 @@ Submit and mark every round before moving on: a source left unmarked is redone f
 ## 7. Report and continue
 
 Per round, one table with one row per measure: sources processed, atoms accepted, atoms rejected with their reasons, what the human dropped or corrected in the confirm step, candidates dropped per reason with counts (covered drops with one-line examples, so over-firing shows early), sources flagged for removal (personal material, a credential), sources left in scope. Name under the table every free label (`person/`, `partner/`, `prospect/`) that was created on first use this round, so the vocabulary never grows unnoticed. Then ask whether to continue with the next batch; stop when the human stops.
+
+!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`
