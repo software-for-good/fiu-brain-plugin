@@ -20,7 +20,7 @@ Every account with brain access:
 
 When `can_write` is true, add `mcp__fiu-brain__submit_atoms`, `mcp__fiu-brain__submit_raw`, `mcp__fiu-brain__update_atom`.
 When `can_approve` is true, add `mcp__fiu-brain__approve`, `mcp__fiu-brain__decline`.
-When the role is `founder` and `can_write` is true, add `mcp__fiu-brain__mark_raw_processed`.
+When the role is `founder` and `can_write` is true, add `mcp__fiu-brain__mark_raw_processed`, `mcp__fiu-brain__delete_raw`.
 
 Nothing outside this list, whatever the human asks in the same breath: other tools get their rules elsewhere.
 

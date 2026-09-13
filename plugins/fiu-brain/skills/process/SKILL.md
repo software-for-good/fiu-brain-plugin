@@ -19,7 +19,7 @@ Ask two things in one message: which scope (one source type, or the whole queue)
 
 Load `fiu:extraction-rules` once, before the first fetch: you read every source with its bar in mind, and its yield expectations decide how much of a source is worth reading at all. Then `list_raws` for the scope; it returns each source's id and the endpoint template. Fetch a source into a local file by curling the `endpoint` URL the listing returned, `{id}` filled in, sending the same bearer token the connector uses (it sits in the session's MCP config; in Claude Code, `claude mcp get fiu-brain`). Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time: fetch, read and extract it before touching the next. For meeting transcripts, extract from the transcript body and ignore a generated summary block at the top: knowledge is never built on a derived layer.
 
-If a source turns out personal or private: extract nothing, quote nothing, still mark it processed like any finished source so it stops resurfacing in the queue, and flag it in the report so Rob can remove the raw itself; that removal is a manual operation on purpose. A source that contains a credential (a bearer token, a password) is flagged the same way, for rotation and for removal from the raw.
+If a source turns out personal or private: extract nothing, quote nothing, and propose its deletion in the round's confirm step; a source without atoms can go, row and hosted file at once, and it is the human who says so. A source that contains a credential (a bearer token, a password) is proposed the same way, for deletion and for rotation. Until the human decides, the source is neither marked nor deleted.
 
 ## 4. Extract
 
@@ -38,18 +38,20 @@ Present the round as tables, never as prose or a plain list.
 - Sources that yielded nothing get one sentence together under the tables, with their citations and ids. A table with no rows says less than a sentence does.
 - One table for everything that did not make it. Columns: candidate, reason. The reason names the funnel step: failed the bar and which condition, filtered and which line, covered, duplicate, conflict. Nothing is dropped silently.
 - The note column is where your judgement surfaces. Use it for a label you could argue either way, for the atom you would cut first if the human cuts one, and for a claim that only just passed the bar. A round in which every note is empty is a round that hid its doubts.
-- Close with two or three sentences under the drop table: the covered drops as a fraction of all candidates, so over-firing shows early, and anything the human must know before confirming, such as a source flagged for removal.
+- Close with two or three sentences under the drop table: the covered drops as a fraction of all candidates, so over-firing shows early, and anything the human must know before confirming, such as a source proposed for deletion (its citation, and why).
 
 The human confirms, corrects or skips by number. Do not walk through source by source and do not summarise sources back at them; the claims are the summary.
 
 ## 6. Submit and mark
 
-`submit_atoms`, fix rejections, resubmit only those. Per source in the round, call `mark_raw_processed` once that source's atoms were accepted, or straight away when it has nothing to submit (zero candidates, everything dropped as duplicate or covered, personal). A source is marked exactly when it needs no more work, so an interrupted run resumes cleanly instead of losing or duplicating work.
+`submit_atoms`, fix rejections, resubmit only those. Per source in the round, call `mark_raw_processed` once that source's atoms were accepted, or straight away when it has nothing to submit (zero candidates, everything dropped as duplicate or covered). A source is marked exactly when it needs no more work, so an interrupted run resumes cleanly instead of losing or duplicating work.
+
+A source the human agreed to delete is deleted instead of marked: `delete_raw` with its id removes the row and the hosted file in the same call, and the source is gone from the queue for good. The server refuses a source that any atom already cites; then mark it processed and flag it in the report for a founder to sort out by hand. When `delete_raw` is not on the connector yet, do the same: mark it processed and flag it for manual removal.
 
 Submit and mark every round before moving on: a source left unmarked is redone from scratch next run, and the corrections made on it are lost with it.
 
 ## 7. Report and continue
 
-Per round, one table with one row per measure: sources processed, atoms accepted, atoms rejected with their reasons, what the human dropped or corrected in the confirm step, candidates dropped per reason with counts (covered drops with one-line examples, so over-firing shows early), sources flagged for removal (personal material, a credential), sources left in scope. Name under the table every free label (`person/`, `partner/`, `prospect/`) that was created on first use this round, so the vocabulary never grows unnoticed. Then ask whether to continue with the next batch; stop when the human stops.
+Per round, one table with one row per measure: sources processed, atoms accepted, atoms rejected with their reasons, what the human dropped or corrected in the confirm step, candidates dropped per reason with counts (covered drops with one-line examples, so over-firing shows early), sources deleted (personal material, a credential) and sources that could not be deleted because atoms cite them, sources left in scope. Name under the table every free label (`person/`, `partner/`, `prospect/`) that was created on first use this round, so the vocabulary never grows unnoticed. Then ask whether to continue with the next batch; stop when the human stops.
 
 !`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`
