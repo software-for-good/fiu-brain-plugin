@@ -119,7 +119,7 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls put them there.
 
-- `index` with no arguments: every company-wide atom, approved and still proposed, titles only. Once per round in `fiu:process`, once in `/stop`.
+- `index` with no arguments: every company-wide atom, approved and still proposed, titles only. Once per round in `fiu:process`, once in `/stop`. A response that names an offset to continue at is not the whole list; call again with that offset until none is named.
 - `index` with the labels of the parties the source concerns (`websites/`, `partner/`, `prospect/`, `person/`) and statuses `["scoped", "company_wide", "proposed"]`: everything the brain holds on those parties. Once per source.
 
 Compare every candidate title against both lists; `get` fetches a body when the title alone does not settle it. `search` is for a candidate whose subject carries no party label, a service or a supermarket: two or three words, with the subject's label. Search matches any of its words and ranks the atoms holding the most of them first, so read the top hits rather than looking for an exact match; a zero result means no atom holds any of the words, and it is evidence only after the index for the subject was read. Never conclude "new" from a query alone. A proposed atom in a list counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal. There are four outcomes.
