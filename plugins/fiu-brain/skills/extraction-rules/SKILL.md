@@ -117,10 +117,15 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 ## 8. Compare with the brain
 
-Check the context pack and `search` each candidate's entity labels before the candidate enters the list. The server bounces exact duplicates with a pointer; everything reworded is your judgement, so look first. There are four outcomes.
+Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls put them there.
+
+- `index` with no arguments: every company-wide atom, approved and still proposed, titles only. Once per round in `fiu:process`, once in `/stop`.
+- `index` with the labels of the parties the source concerns (`websites/`, `partner/`, `prospect/`, `person/`) and statuses `["scoped", "company_wide", "proposed"]`: everything the brain holds on those parties. Once per source.
+
+Compare every candidate title against both lists; `get` fetches a body when the title alone does not settle it. `search` is for a candidate whose subject carries no party label, a service or a supermarket: two or three words, with the subject's label. Search matches any of its words and ranks the atoms holding the most of them first, so read the top hits rather than looking for an exact match; a zero result means no atom holds any of the words, and it is evidence only after the index for the subject was read. Never conclude "new" from a query alone. A proposed atom in a list counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal. There are four outcomes.
 
 - New: keep the candidate.
-- Duplicate: drop the candidate.
+- Duplicate: drop the candidate; when the source sharpens a proposed atom, correct that atom in place instead (below).
 - Covered: the candidate is an older value of something a newer atom already answers. Drop it, count it, and ask once whether the change between then and now itself passes the bar. Usually it does not. When it does, because the change was a deliberate and reasoned shift in how FIU or a client works, the change becomes one transition atom. Example: the brain holds "FIU prices campaigns as a percentage of media budget" (2025) and a 2022 mail prices a campaign at 450 euro per post. The 450 euro atom is never made. If the sources show that the switch was a real 2023 decision, the atom is "In 2023 FIU moved campaign pricing from a fee per post to a percentage of media budget", with the old fee in the body. Events, decisions and reasons are never covered merely by being old.
 - Conflict: sources of the same age disagree. Make one company-wide atom that states both values.
 

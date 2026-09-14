@@ -13,7 +13,7 @@ Take the identity from the `whoami:` line of the server instructions. If the lin
 
 ## 2. Extract
 
-Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English.
+Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. Before the compare step of the funnel, call `index` with no arguments and `index` with the labels of the parties this session touched, as the extraction rules describe: the context pack of the session start is budgeted and is not the brain of now.
 
 Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 

@@ -15,7 +15,7 @@ Take the identity from the `whoami:` line of the server instructions, as `/start
 
 Every account with brain access:
 
-- `mcp__fiu-brain__whoami`, `mcp__fiu-brain__status`, `mcp__fiu-brain__labels`, `mcp__fiu-brain__context_pack`, `mcp__fiu-brain__search`, `mcp__fiu-brain__get`, `mcp__fiu-brain__list_raws`
+- `mcp__fiu-brain__whoami`, `mcp__fiu-brain__status`, `mcp__fiu-brain__labels`, `mcp__fiu-brain__context_pack`, `mcp__fiu-brain__search`, `mcp__fiu-brain__index`, `mcp__fiu-brain__get`, `mcp__fiu-brain__list_raws`
 - `Bash(python3 *mail_sweep.py *)` and `Bash(python3 *transcript_sweep.py *)`, the two local sweeps
 
 When `can_write` is true, add `mcp__fiu-brain__submit_atoms`, `mcp__fiu-brain__submit_raw`, `mcp__fiu-brain__update_atom`.
