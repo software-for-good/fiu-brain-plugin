@@ -44,7 +44,7 @@ Present the queue as tables, never as prose or a plain list. The tables are the 
 The founder rules by number or by group, in one word where they can; walk the items one by one only where they ask. Do not walk group by group and do not summarise atoms back at them; the claims are the summary. Per item the founder can:
 
 - approve
-- approve with an edit: show the corrected title or body in full first, because the founder approves wording, not intention; then call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it
+- approve with an edit: show the corrected title or body in full first, because the founder approves wording, not intention; then call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it. Edit a contradicted claim into the true claim, written as step 4 of the extraction rules writes it; the check itself stays on the screen
 - decline, always with a reason; the reason is what stops the claim coming back
 - leave it open
 
