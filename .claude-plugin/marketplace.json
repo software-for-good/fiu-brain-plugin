@@ -9,7 +9,7 @@
       "name": "fiu",
       "source": "./plugins/fiu-brain",
       "description": "The FIU Brain skills: session start/stop, optimise, extraction rules, guardrails, the work folder, the two sweeps and the four paths after start.",
-      "version": "2.5.0"
+      "version": "2.9.0"
     }
   ]
 }
