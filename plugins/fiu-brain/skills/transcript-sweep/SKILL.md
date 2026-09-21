@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 Same pipeline as `/mail-sweep`, simpler input: one export file per meeting, each opening with a header block (title, `Datum`, `Granola label`, `Voorstel labels`, `Deelnemers`, `Granola ID`), then a generated summary, then the transcript. Your only job here is the privacy gate: in or out, and at which clearance. Content classification, labels and atoms belong to `fiu:process`, after ingest, which applies its own second filter to every source; doing any of that here would duplicate the extraction rules and drift.
 
+A sweep is a session entry point of its own, so the guardrails are not in your context: load `fiu:guardrails` now; they apply for the rest of the session.
+
 Needs a shell (Claude Code or Cowork). Expect hundreds to a few thousand exports per person.
 
 ## 1. Scope

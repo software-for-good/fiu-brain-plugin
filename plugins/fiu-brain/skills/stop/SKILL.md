@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /stop
 
-You curate this session into the FIU Brain. If this session ran no `/start` path, so the guardrails are not in your context, load `fiu:guardrails` now.
+You curate this session into the FIU Brain. If this session did not run `/start`, load `fiu:guardrails` now.
 
 ## 1. Gate
 
@@ -13,7 +13,7 @@ Take the identity from the `whoami:` line of the server instructions. If the lin
 
 ## 2. Extract
 
-Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English.
+Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. Before the compare step of the funnel, call `index` with no arguments and `index` with the labels of the parties this session touched, as the extraction rules describe: the context pack of the session start is budgeted and is not the brain of now.
 
 Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 
@@ -33,7 +33,7 @@ When you sense the human is passing on AI-made material without having engaged w
 
 ## 5. The session as a source
 
-Submit the session transcript with `submit_raw` first (title, the full transcript, the session's start time as `source_at`); it enters processed, since this session already extracted, and its id goes into every atom's `sources`. When the tool is not on the connector yet, skip this silently; the atoms stand on their own.
+Submit the session transcript with `submit_raw` first (title, the full transcript, the session's start time as `source_at`); it enters processed, since this session already extracted, and its id goes into every atom's `sources`.
 
 ## 6. Submit
 

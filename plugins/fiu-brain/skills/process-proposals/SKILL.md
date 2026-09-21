@@ -5,7 +5,7 @@ user-invocable: false
 
 # Approve company-wide atoms
 
-This flow is reached from `/start`, which established who you work with; reuse it. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions before anything else. The guardrails at the end of this skill apply for the whole session.
+This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` before anything else.
 
 A company-wide atom applies to everyone, so it enters as `proposed` and becomes company truth only here. Scoped atoms never pass through this flow; they are live from the moment they are accepted.
 
@@ -44,7 +44,7 @@ Present the queue as tables, never as prose or a plain list. The tables are the 
 The founder rules by number or by group, in one word where they can; walk the items one by one only where they ask. Do not walk group by group and do not summarise atoms back at them; the claims are the summary. Per item the founder can:
 
 - approve
-- approve with an edit: show the corrected title or body in full first, because the founder approves wording, not intention; then call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it
+- approve with an edit: show the corrected title or body in full first, because the founder approves wording, not intention; then call `update_atom` with the corrected title, body, labels or clearance (a proposed atom is editable until it is decided; its filename stays), then approve it. Edit a contradicted claim into the true claim, written as step 4 of the extraction rules writes it; the check itself stays on the screen
 - decline, always with a reason; the reason is what stops the claim coming back
 - leave it open
 
@@ -57,5 +57,3 @@ Call `update_atom`, `approve` and `decline`, one atom per call. Until those exis
 ## 7. Report
 
 Approved, declined with reasons, left open, and how many proposed atoms remain.
-
-!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`

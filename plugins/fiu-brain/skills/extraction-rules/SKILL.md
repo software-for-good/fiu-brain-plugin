@@ -1,11 +1,11 @@
 ---
-description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop, in fiu:process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
+description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop and in fiu:process. If a rule here disagrees with a rule anywhere else, this file wins.
 user-invocable: false
 ---
 
 # Extraction rules
 
-Every atom in the brain is made with this funnel. `/stop`, `fiu:process` and every ingest run the funnel once per source and never restate it. Everything you write is English, whatever language the source spoke.
+Every atom in the brain is made with this funnel. `/stop` and `fiu:process` run the funnel once per source and never restate it. Everything you write is English, whatever language the source spoke.
 
 ## Who owns what
 
@@ -30,16 +30,16 @@ Scope is whom a claim concerns. There are two kinds of atom, and the kind is nam
 Clearance is who may see something. It applies to atoms and to raws alike, and it is independent of scope. The three levels are `public`, `team` and `founders`.
 
 - The default is `team`. Omit the field and the server sets it, raised to the highest clearance among the atom's sources and labels.
-- Use `founders` only when the fact itself is founders-sensitive: deal terms under wraps, HR-adjacent business facts, acquisition interest.
+- Use `founders` only when the fact itself is founders-sensitive: HR-adjacent business facts, potential acquisition interest or otherwise sensitive topics.
 - Use `public` only for facts FIU would put on its website.
 - The server enforces the floors. An atom never sits below its sources or its labels, and never above your own clearance. A label above your clearance is unusable; if that surprises you, tell the human instead of retrying.
 
 ## 1. Take the source
 
-The source arrives in one of three ways. `/stop` gives you the session you are in, `fiu:process` gives you a raw fetched from the queue, and an ingest gives you its files. Read each type of source in its own way.
+The source arrives in one of two ways. `/stop` gives you the session you are in, and `fiu:process` gives you a raw fetched from the queue. Read each type of source in its own way.
 
 - A meeting transcript: read the transcript body. Ignore a generated summary block at the top, because knowledge is never built on a derived layer.
-- A Claude session: the whole session is the source, both what you produced and what the human said. What the human said weighs more than what you produced.
+- A Claude session: the whole session is the source, both what you produced and what the human said. What the human said weighs more than what you produced. A session that worked in a codebase yields its decisions and what people can now do; the code holds the how.
 - A mail thread: read the messages in order. Quoted text inside a reply repeats an earlier message, so read each message once. The last message holds the latest state of the thread.
 - A document, a deck or a storyline: read it as an argument. Only the decisions it records and the company-wide takeaways survive the bar; the argument itself does not.
 
@@ -58,7 +58,7 @@ Whether a fact also stands in the docs, in the code, on the website or in a mail
 - Passes: "FIU decided on 27 August 2026 not to attend a partner's event, because winning and keeping creators needs no such event." A decision with its reason passes, whatever the decision is about.
 - Fails: "Zesty 2.0 is organised around arriving, staying and returning." That is a draft storyline for a session that has not been held.
 
-Typical yields are calibration, never a target: a support or account thread gives 1 to 4 atoms, a multi-month thread up to 8, an hour of meeting 3 to 8, a strategy document 3 to 10, a working session 0 to 3. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out: a missing atom costs one question later, and a wrong atom gets repeated as truth.
+Typical yields are calibration, never a target: a support or account thread gives 1 to 2 atoms, a multi-month thread up to 4, an hour of meeting 1 to 4, a strategy document 1 to 5, a working session 0 to 2. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out: a missing atom costs one question later, and a wrong atom gets repeated as truth.
 
 ## 3. Split
 
@@ -73,7 +73,8 @@ Split a claim until a smaller piece would stop reading on its own. One claim per
 - The body states the claim in plain English, one idea per sentence, with only the context a colleague needs to act on it. The guideline is 1,024 characters and the hard maximum is 2,048. If the body needs a second idea to make sense, that idea is its own atom or it is padding.
 - The body says who said it: "Heinz DE said ...", "Team assessment: ...", "The 2026 rate card states ...".
 - Dates and numbers are unambiguous: "26 August 2026", "10 percent of media budget", never "last month" or "the usual fee". State claims. Mark doubt in the text: "Heinz has not confirmed this."
-- Use the same word for the same concept. Write service and register names exactly as the labels tool spells them, without asking; when a source uses another name, the body may mention it once. Spell out an abbreviation on first use: "recipe to basket (R2B)". No idiom, no metaphor, no marketing language.
+- Use the same word for the same concept, and call an FIU concept by the one name FIU uses for it, the name a colleague greps for and the `theme/jargon` atoms define: canonicalFamily, not ingredient family. The reader translates for the audience, the atom does not. A sentence gets one reading only: a verb that is also an entity (names, matches, orders, options) is rewritten. Write service and register names exactly as the labels tool spells them, without asking; when a source uses another name, the body may mention it once. Spell out an abbreviation on first use: "recipe to basket (R2B)". No idiom, no metaphor, no marketing language.
+- Write a product claim as what the system does for people and why, in the words a colleague uses for FIU's systems. Name what someone outside FIU types or sees. The code, the commit and the raw hold the how.
 - Numbers. An agreed number is always an atom. A measured number (traffic, saves, conversion, a share) is an atom only when someone used it to decide or to persuade, and then the body dates and attributes it: "On 1 September 2026 Rob told Lemone that FIU's traffic is 70 to 80 percent mobile." A source full of figures gets one pointer atom. Its title names the set and the period, never the figures themselves: "Zesty's platform figures for its first eleven months are recorded in the Early Birds storyline of 31 August 2026." The figures that carry the argument get atoms of their own; the supporting figures stay in the raw.
 - An agreed action item reads like this: "Agreed: Robert sends the Heinz rate card before 5 September 2026." A commitment is a decision; bare scheduling is not.
 - An absence that matters reads like this: "At the time of writing FIU has no pricing agreement with Jumbo." The body carries the date, and the atom that arranges the matter later supersedes it.
@@ -117,10 +118,15 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 ## 8. Compare with the brain
 
-Check the context pack and `search` each candidate's entity labels before the candidate enters the list. The server bounces exact duplicates with a pointer; everything reworded is your judgement, so look first. There are four outcomes.
+Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls of `index` put them there.
+
+- `index` with no arguments: every company-wide atom, company truth and the claims still awaiting a founder, titles only. Hold the whole list, never a sample: a response that names an offset to continue at is not the whole list, so call again with that offset until no such line remains. Once per round in `fiu:process`, once in `/stop`. The listing sections by status, and an atom under `## proposed` counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal.
+- `index` with statuses `["scoped"]` and the labels of the parties your atoms will carry (`websites/`, `partner/`, `prospect/`, `person/`): what the brain holds on those parties. Once per source. The company-wide claims about them already stand in the first list, so this call asks for the scoped ones only. A label the brain does not hold yet stops the call and names itself; drop that label and call again, because a party the brain does not know has no atoms to compare against.
+
+Compare every candidate against both lists, title by title. A title is the whole claim, so the lists are the content; `get` fetches up to twenty bodies at once when the titles alone do not settle it. Never conclude "new" before both lists have been read to the end. There are four outcomes.
 
 - New: keep the candidate.
-- Duplicate: drop the candidate.
+- Duplicate: drop the candidate; when the source sharpens a proposed atom, correct that atom in place instead (below).
 - Covered: the candidate is an older value of something a newer atom already answers. Drop it, count it, and ask once whether the change between then and now itself passes the bar. Usually it does not. When it does, because the change was a deliberate and reasoned shift in how FIU or a client works, the change becomes one transition atom. Example: the brain holds "FIU prices campaigns as a percentage of media budget" (2025) and a 2022 mail prices a campaign at 450 euro per post. The 450 euro atom is never made. If the sources show that the switch was a real 2023 decision, the atom is "In 2023 FIU moved campaign pricing from a fee per post to a percentage of media budget", with the old fee in the body. Events, decisions and reasons are never covered merely by being old.
 - Conflict: sources of the same age disagree. Make one company-wide atom that states both values.
 

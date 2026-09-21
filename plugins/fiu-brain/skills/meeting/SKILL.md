@@ -5,7 +5,7 @@ user-invocable: false
 
 # Prepare a client meeting
 
-`/start` established who you work with; reuse it. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions first. The guardrails at the end of this skill apply for the rest of the session.
+`/start` established who you work with, and carries the guardrails that apply for the rest of the session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` first.
 
 ## 1. Resolve
 
@@ -26,5 +26,3 @@ Only then draft the agenda or talking points, in their voice. Before the first f
 ## 5. Close
 
 Remind the human to run `/stop`: the preparation itself is client history the brain should hold.
-
-!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`

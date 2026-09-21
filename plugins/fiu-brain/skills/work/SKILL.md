@@ -5,7 +5,7 @@ user-invocable: false
 
 # Work with the brain
 
-`/start` established who you work with and what for; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions first. The guardrails at the end of this skill apply for the rest of the session.
+`/start` established who you work with and what for, and carries the guardrails that apply for the rest of the session; reuse all of it. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` first.
 
 ## 1. Load context
 
@@ -23,5 +23,3 @@ Derive candidate labels from the goal and check them with the `labels` tool; nev
 ## 3. Close
 
 When the session produced anything worth remembering, remind the human to run `/stop`. Without `/stop`, nothing reaches the brain and no client history is built.
-
-!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`
