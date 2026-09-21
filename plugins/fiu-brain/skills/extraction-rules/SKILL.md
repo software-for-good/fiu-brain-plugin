@@ -1,11 +1,11 @@
 ---
-description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop, in fiu:process, and in any ingest. If a rule here disagrees with a rule anywhere else, this file wins.
+description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop and in fiu:process. If a rule here disagrees with a rule anywhere else, this file wins.
 user-invocable: false
 ---
 
 # Extraction rules
 
-Every atom in the brain is made with this funnel. `/stop`, `fiu:process` and every ingest run the funnel once per source and never restate it. Everything you write is English, whatever language the source spoke.
+Every atom in the brain is made with this funnel. `/stop` and `fiu:process` run the funnel once per source and never restate it. Everything you write is English, whatever language the source spoke.
 
 ## Who owns what
 
@@ -30,13 +30,13 @@ Scope is whom a claim concerns. There are two kinds of atom, and the kind is nam
 Clearance is who may see something. It applies to atoms and to raws alike, and it is independent of scope. The three levels are `public`, `team` and `founders`.
 
 - The default is `team`. Omit the field and the server sets it, raised to the highest clearance among the atom's sources and labels.
-- Use `founders` only when the fact itself is founders-sensitive: deal terms under wraps, HR-adjacent business facts, acquisition interest.
+- Use `founders` only when the fact itself is founders-sensitive: HR-adjacent business facts, potential acquisition interest or otherwise sensitive topics.
 - Use `public` only for facts FIU would put on its website.
 - The server enforces the floors. An atom never sits below its sources or its labels, and never above your own clearance. A label above your clearance is unusable; if that surprises you, tell the human instead of retrying.
 
 ## 1. Take the source
 
-The source arrives in one of three ways. `/stop` gives you the session you are in, `fiu:process` gives you a raw fetched from the queue, and an ingest gives you its files. Read each type of source in its own way.
+The source arrives in one of two ways. `/stop` gives you the session you are in, and `fiu:process` gives you a raw fetched from the queue. Read each type of source in its own way.
 
 - A meeting transcript: read the transcript body. Ignore a generated summary block at the top, because knowledge is never built on a derived layer.
 - A Claude session: the whole session is the source, both what you produced and what the human said. What the human said weighs more than what you produced. A session that worked in a codebase yields its decisions and what people can now do; the code holds the how.
@@ -58,7 +58,7 @@ Whether a fact also stands in the docs, in the code, on the website or in a mail
 - Passes: "FIU decided on 27 August 2026 not to attend a partner's event, because winning and keeping creators needs no such event." A decision with its reason passes, whatever the decision is about.
 - Fails: "Zesty 2.0 is organised around arriving, staying and returning." That is a draft storyline for a session that has not been held.
 
-Typical yields are calibration, never a target: a support or account thread gives 1 to 4 atoms, a multi-month thread up to 8, an hour of meeting 3 to 8, a strategy document 3 to 10, a working session 0 to 3. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out: a missing atom costs one question later, and a wrong atom gets repeated as truth.
+Typical yields are calibration, never a target: a support or account thread gives 1 to 2 atoms, a multi-month thread up to 4, an hour of meeting 1 to 4, a strategy document 1 to 5, a working session 0 to 2. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out: a missing atom costs one question later, and a wrong atom gets repeated as truth.
 
 ## 3. Split
 
@@ -118,12 +118,12 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 ## 8. Compare with the brain
 
-Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls put them there.
+Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls of `index` put them there.
 
-- `index` with no arguments: every company-wide atom, approved and still proposed, titles only. Once per round in `fiu:process`, once in `/stop`. A response that names an offset to continue at is not the whole list; call again with that offset until none is named.
-- `index` with the labels of the parties the source concerns (`websites/`, `partner/`, `prospect/`, `person/`) and statuses `["scoped", "company_wide", "proposed"]`: everything the brain holds on those parties. Once per source.
+- `index` with no arguments: every company-wide atom, company truth and the claims still awaiting a founder, titles only. Hold the whole list, never a sample: a response that names an offset to continue at is not the whole list, so call again with that offset until no such line remains. Once per round in `fiu:process`, once in `/stop`. The listing sections by status, and an atom under `## proposed` counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal.
+- `index` with statuses `["scoped"]` and the labels of the parties your atoms will carry (`websites/`, `partner/`, `prospect/`, `person/`): what the brain holds on those parties. Once per source. The company-wide claims about them already stand in the first list, so this call asks for the scoped ones only. A label the brain does not hold yet stops the call and names itself; drop that label and call again, because a party the brain does not know has no atoms to compare against.
 
-Compare every candidate title against both lists; `get` fetches a body when the title alone does not settle it. `search` is for a candidate whose subject carries no party label, a service or a supermarket: two or three words, with the subject's label. Search matches any of its words and ranks the atoms holding the most of them first, so read the top hits rather than looking for an exact match; a zero result means no atom holds any of the words, and it is evidence only after the index for the subject was read. Never conclude "new" from a query alone. A proposed atom in a list counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal. There are four outcomes.
+Compare every candidate against both lists, title by title. A title is the whole claim, so the lists are the content; `get` fetches up to twenty bodies at once when the titles alone do not settle it. Never conclude "new" before both lists have been read to the end. There are four outcomes.
 
 - New: keep the candidate.
 - Duplicate: drop the candidate; when the source sharpens a proposed atom, correct that atom in place instead (below).

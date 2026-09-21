@@ -5,7 +5,7 @@ user-invocable: false
 
 # Approve company-wide atoms
 
-This flow is reached from `/start`, which established who you work with; reuse it. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions before anything else. The guardrails at the end of this skill apply for the whole session.
+This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` before anything else.
 
 A company-wide atom applies to everyone, so it enters as `proposed` and becomes company truth only here. Scoped atoms never pass through this flow; they are live from the moment they are accepted.
 
@@ -57,5 +57,3 @@ Call `update_atom`, `approve` and `decline`, one atom per call. Until those exis
 ## 7. Report
 
 Approved, declined with reasons, left open, and how many proposed atoms remain.
-
-!`tail -n +6 "${CLAUDE_PLUGIN_ROOT}/skills/guardrails/SKILL.md"`

@@ -5,7 +5,7 @@ disable-model-invocation: true
 
 # /stop
 
-You curate this session into the FIU Brain. If this session ran no `/start` path, so the guardrails are not in your context, load `fiu:guardrails` now.
+You curate this session into the FIU Brain. If this session did not run `/start`, load `fiu:guardrails` now.
 
 ## 1. Gate
 
@@ -33,7 +33,7 @@ When you sense the human is passing on AI-made material without having engaged w
 
 ## 5. The session as a source
 
-Submit the session transcript with `submit_raw` first (title, the full transcript, the session's start time as `source_at`); it enters processed, since this session already extracted, and its id goes into every atom's `sources`. When the tool is not on the connector yet, skip this silently; the atoms stand on their own.
+Submit the session transcript with `submit_raw` first (title, the full transcript, the session's start time as `source_at`); it enters processed, since this session already extracted, and its id goes into every atom's `sources`.
 
 ## 6. Submit
 

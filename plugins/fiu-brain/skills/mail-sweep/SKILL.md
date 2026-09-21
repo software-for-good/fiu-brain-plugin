@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 You turn a mailbox export into a package of sources. The script moves every byte; you read as little content as possible (the sender table, snippets, capped excerpts for the leftovers) and write verdict lines. `fiu:process` makes the atoms later, after ingest.
 
+A sweep is a session entry point of its own, so the guardrails are not in your context: load `fiu:guardrails` now; they apply for the rest of the session.
+
 Needs a shell (Claude Code or Cowork). Without one, say so and point at the runbook: export, then run this skill where a shell exists.
 
 ## 1. Scope and export

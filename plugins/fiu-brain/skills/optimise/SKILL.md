@@ -8,7 +8,7 @@ compatibility: Claude Code only. This skill writes permission rules into the per
 
 **Claude Code only.** Before anything else: if this session is not Claude Code, say in one line that this skill only has work to do in Claude Code, and stop. The rules it writes live in the Claude Code settings file, which Cowork and the Claude apps do not have. Nothing below applies there.
 
-Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that the path skills render into their own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it.
+Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that `/start` renders into its own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it.
 
 ## 1. Who
 
