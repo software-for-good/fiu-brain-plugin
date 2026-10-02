@@ -48,6 +48,8 @@ The human confirms, corrects or skips by number. Do not walk through source by s
 
 ## 6. Submit and mark
 
+This step runs when the human types `/stop`, never before.
+
 `submit_atoms`, fix rejections, resubmit only those. Per source in the round, call `mark_raw_processed` once that source's atoms were accepted, or straight away when it has nothing to submit (zero candidates, everything dropped as duplicate or covered). A source is marked exactly when it needs no more work, so an interrupted run resumes cleanly instead of losing or duplicating work.
 
 A source the human agreed to delete is deleted instead of marked: `delete_raw` with its id removes the row and the hosted file in the same call, and the source is gone from the queue for good. The server refuses a source that any atom already cites; then mark it processed and flag it in the report for a founder to sort out by hand.

@@ -1,5 +1,5 @@
 ---
-description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Load this before calling submit_atoms, in /stop and in fiu:process. If a rule here disagrees with a rule anywhere else, this file wins.
+description: The rules for turning knowledge into FIU Brain atoms, as one funnel run per source. Loaded by /stop and fiu:process. If a rule here disagrees with a rule anywhere else, this file wins.
 user-invocable: false
 ---
 

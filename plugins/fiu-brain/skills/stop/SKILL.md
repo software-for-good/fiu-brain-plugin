@@ -5,7 +5,9 @@ disable-model-invocation: true
 
 # /stop
 
-You curate this session into the FIU Brain. If this session did not run `/start`, load `fiu:guardrails` now.
+You curate this session into the FIU Brain. This is the only place atoms are submitted: no skill submits before the human types `/stop`, and here nothing is submitted before the human has seen the atoms of step 3 and confirmed. If this session did not run `/start`, load `fiu:guardrails` now.
+
+In a `fiu:process` session, the round the human confirmed there is the harvest: skip steps 2 to 5 and go to `fiu:process` step 6, which submits and marks it.
 
 ## 1. Gate
 
