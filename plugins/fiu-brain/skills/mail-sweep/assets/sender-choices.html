@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>Mail sweep: who goes into the brain</title>
+<!--
+  The page of /mail-sweep on which the owner chooses per sender. mail_sweep.py page fills
+  __SWEEP_DATA__ and writes the result into the sweep's work folder. It works offline: the
+  policy above forbids every network request, and choices live only in this browser's
+  localStorage until the owner copies the hand-over text into the chat.
+-->
+<style>
+:root {
+  --paper: #f2f4f1;
+  --sheet: #ffffff;
+  --ink: #16233a;
+  --ink-soft: #3e4b5e;
+  --pencil: #69717b;
+  --rule: #dfe3dc;
+  --rule-strong: #c6cdc5;
+  --basil: #2c6943;
+  --saffron: #8f6200;
+  --aubergine: #5a3a5c;
+  --pen: #2446c9;
+  --pen-wash: #edf1ff;
+  --on-fill: #ffffff;
+  --display: "DIN Alternate", "DIN Next LT Pro", "DIN Pro", Bahnschrift, "D-DIN", system-ui, sans-serif;
+  --text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0e1317;
+    --sheet: #151b21;
+    --ink: #e4e8ed;
+    --ink-soft: #b9c2cc;
+    --pencil: #98a1ab;
+    --rule: #262f38;
+    --rule-strong: #36414c;
+    --basil: #7cc592;
+    --saffron: #e2b14e;
+    --aubergine: #cc9ccd;
+    --pen: #9aadff;
+    --pen-wash: #1b2242;
+    --on-fill: #0e1317;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--text); font-variant-numeric: tabular-nums; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+.topbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 13px; color: var(--pencil); }
+.topbar strong { color: var(--ink); font-weight: 600; }
+.saved.warn { color: var(--aubergine); font-weight: 600; }
+
+.intro { padding: 34px 0 26px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.2vw, 46px); line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 14px; }
+.lede { font-size: 17px; max-width: 70ch; margin: 0 0 28px; color: var(--ink-soft); }
+.trays { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin: 0 0 24px; }
+.trays div { border-top: 4px solid var(--tray); padding-top: 10px; }
+.trays dt { font-family: var(--display); font-weight: 700; font-size: 19px; color: var(--tray); margin: 0 0 4px; }
+.trays dd { margin: 0; max-width: 42ch; }
+.tray-include { --tray: var(--basil); }
+.tray-partial { --tray: var(--saffron); }
+.tray-exclude { --tray: var(--aubergine); }
+.pencil-ink { margin: 0 0 14px; max-width: 75ch; }
+.pencil { color: var(--pencil); text-decoration: underline dashed var(--pencil); text-underline-offset: 3px; }
+.ink { color: var(--pen); font-weight: 600; }
+.set-aside { max-width: 75ch; color: var(--ink-soft); }
+.set-aside summary { cursor: pointer; }
+.set-aside ul { margin: 8px 0 0; padding-left: 20px; }
+
+.rack { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--rule-strong); padding: 14px 0 12px; }
+.bar { display: flex; gap: 2px; height: 16px; border-radius: 8px; overflow: hidden; background: var(--rule); }
+.bar span { flex: 0 1 0; transition: flex-grow .35s ease; }
+.bar .in { background: var(--basil); }
+.bar .read { background: var(--saffron); }
+.bar .out { background: var(--aubergine); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 30px; margin: 10px 0 12px; }
+.legend p { margin: 0; display: flex; align-items: baseline; gap: 8px; }
+.legend b { font-family: var(--display); font-size: 26px; font-weight: 700; line-height: 1; border-radius: 4px; padding: 0 2px; }
+.legend .in b { color: var(--basil); }
+.legend .read b { color: var(--saffron); }
+.legend .out b { color: var(--aubergine); }
+.legend .flash b { animation: flash .7s ease; }
+@keyframes flash { from { background: var(--pen-wash); } to { background: transparent; } }
+.tools { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.search { flex: 1 1 220px; max-width: 320px; padding: 8px 12px; border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--sheet); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { padding: 6px 11px; border-radius: 999px; border: 1px solid var(--rule-strong); background: transparent; font-size: 13px; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.primary { padding: 9px 18px; border-radius: 8px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 600; }
+.secondary { padding: 9px 16px; border-radius: 8px; border: 1px solid var(--rule-strong); background: transparent; font-weight: 600; }
+.tools .primary { margin-left: auto; }
+.stale { margin: 10px 0 0; color: var(--pen); font-weight: 600; font-size: 13.5px; }
+
+.sheet-tools { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 18px 0 0; font-size: 13.5px; }
+.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 12px; margin: 10px 0 28px; }
+.cols, .group { display: grid; grid-template-columns: minmax(210px, 1.15fr) minmax(0, 4.4fr); gap: 18px; }
+.cols { padding: 10px 18px; border-bottom: 1px solid var(--rule); font-size: 13px; color: var(--pencil); }
+.cols .rest, .line { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.15fr) 272px; gap: 18px; align-items: start; }
+.cols .rest { padding: 0 12px; }
+.group { padding: 14px 18px; border-top: 1px solid var(--rule); }
+.cols + .group { border-top: 0; }
+.group.folded { padding-top: 8px; padding-bottom: 8px; }
+.company { min-width: 0; }
+.company h2 { margin: 0; font-size: 17px; line-height: 1.3; }
+.fold { display: inline-flex; align-items: baseline; gap: 8px; padding: 2px 0; border: 0; background: none; text-align: left; font-family: var(--display); font-size: inherit; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
+.fold::before { content: ""; flex: none; width: 0; height: 0; border-left: 6px solid var(--pencil); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; transform: translateY(-2px); transition: transform .15s ease; }
+.fold[aria-expanded="true"]::before { transform: translateY(-2px) rotate(90deg); }
+.fold:disabled::before { opacity: .35; }
+.company p { margin: 2px 0 0; font-size: 13px; color: var(--pencil); }
+.group.folded .company p { display: none; }
+.rest, .members { display: grid; gap: 4px; min-width: 0; }
+.line { padding: 10px 12px; border-radius: 8px; }
+.group.folded .line { padding-top: 4px; padding-bottom: 4px; }
+.line.changed { background: var(--pen-wash); box-shadow: inset 3px 0 0 var(--pen); }
+.who { min-width: 0; }
+.who p { margin: 0; }
+.name { font-weight: 600; overflow-wrap: anywhere; }
+.addr { color: var(--ink-soft); font-size: 14px; overflow-wrap: anywhere; }
+.facts, .examples { margin-top: 2px; font-size: 13px; color: var(--pencil); }
+.examples { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.names { font-size: 14px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 6px; }
+.names .name { color: var(--ink); }
+.names .count { color: var(--pencil); font-size: 13px; }
+.advice .verdict { color: var(--pencil); font-weight: 600; text-decoration: underline dashed var(--pencil); text-underline-offset: 3px; }
+.advice .why { display: block; font-size: 13px; color: var(--pencil); }
+.summary .advice { padding-top: 6px; }
+.group.folded .advice .why { display: inline; margin-left: 8px; }
+.choice { display: grid; gap: 6px; justify-items: start; }
+.everyone, .mixed { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
+.group.folded .everyone { display: none; }
+.seg { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--rule-strong); border-radius: 9px; background: var(--sheet); }
+.seg button { padding: 7px 12px; border-radius: 6px; border: 1px solid transparent; background: transparent; font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
+.seg button.advised { border: 1px dashed var(--pencil); }
+.seg button[aria-pressed="true"] { color: var(--on-fill); border-style: solid; }
+.seg button[data-v="include"][aria-pressed="true"] { background: var(--basil); border-color: var(--basil); }
+.seg button[data-v="partial"][aria-pressed="true"] { background: var(--saffron); border-color: var(--saffron); }
+.seg button[data-v="exclude"][aria-pressed="true"] { background: var(--aubergine); border-color: var(--aubergine); }
+.consequence { margin: 0; font-size: 13px; color: var(--ink-soft); max-width: 38ch; }
+.changed-note { margin: 0; font-size: 13px; color: var(--pen); }
+.linklike { border: 0; background: none; padding: 0; color: var(--pen); text-decoration: underline; text-underline-offset: 2px; }
+.empty { padding: 36px 18px; color: var(--ink-soft); }
+
+.close { padding: 4px 0 64px; display: grid; gap: 14px; justify-items: start; }
+.close .primary { font-size: 16px; padding: 12px 22px; }
+.close p { margin: 0; max-width: 72ch; color: var(--ink-soft); }
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+dialog { width: min(660px, calc(100% - 32px)); border: 1px solid var(--rule-strong); border-radius: 14px; padding: 26px; background: var(--sheet); color: var(--ink); }
+dialog::backdrop { background: rgba(14, 19, 23, .5); }
+dialog h2 { font-family: var(--display); font-size: 25px; margin: 0 0 10px; }
+dialog p { margin: 0 0 12px; }
+.copied { color: var(--basil); font-weight: 600; }
+dialog textarea { width: 100%; min-height: 170px; padding: 10px 12px; border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--paper); color: var(--ink); font: 13px/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace; resize: vertical; }
+dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.fine { font-size: 13px; color: var(--ink-soft); }
+
+@media (max-width: 860px) {
+  .wrap { padding: 0 16px; }
+  .trays { grid-template-columns: 1fr; gap: 16px; }
+  .rack { position: static; }
+  .cols { display: none; }
+  .group { grid-template-columns: 1fr; gap: 6px; padding: 12px; }
+  .line { grid-template-columns: 1fr; gap: 8px; padding: 10px 8px; }
+  .names, .summary .advice { padding-top: 0; }
+  .tools .primary { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar span, .fold::before { transition: none; }
+  .legend .flash b { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span><strong>FIU Brain</strong> mail sweep</span>
+    <span class="saved" id="saved" aria-live="polite"></span>
+  </div>
+
+  <header class="intro">
+    <h1>Who goes into the brain?</h1>
+    <p class="lede" id="lede"></p>
+    <dl class="trays">
+      <div class="tray-include"><dt>Include</dt><dd>Conversations with this sender go into the brain unread, also when an excluded sender is on them: you don’t write confidential things with them on the conversation.</dd></div>
+      <div class="tray-partial"><dt>Partial</dt><dd>The AI reads every conversation this sender is on, whoever else is on it, and leaves out what doesn’t belong.</dd></div>
+      <div class="tray-exclude"><dt>Exclude</dt><dd>Conversations with only excluded senders stay out, and nobody reads them. Include wins: with an included sender on it, a conversation goes in anyway.</dd></div>
+    </dl>
+    <p class="pencil-ink">The AI’s advice is in <span class="pencil">pencil</span>, your choice is in <span class="ink">ink</span>. A sender you leave alone keeps the advice; you can change any of them. A company where everyone is included, or everyone excluded, is folded into one line: click its name to see who is in it.</p>
+    <details class="set-aside" id="set-aside"><summary id="set-aside-summary"></summary><ul id="set-aside-list"></ul></details>
+  </header>
+</div>
+
+<div class="rack">
+  <div class="wrap">
+    <div class="bar" aria-hidden="true"><span class="in" id="bar-in"></span><span class="read" id="bar-read"></span><span class="out" id="bar-out"></span></div>
+    <div class="legend" aria-live="polite">
+      <p class="in" id="count-in"><b></b><span>conversations go into the brain unread</span></p>
+      <p class="read" id="count-read"><b></b><span>the AI reads first</span></p>
+      <p class="out" id="count-out"><b></b><span>stay out</span></p>
+    </div>
+    <div class="tools">
+      <input class="search" id="search" type="search" placeholder="Find a sender or company" aria-label="Find a sender or company">
+      <div class="filters" id="filters" role="group" aria-label="Show">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="changed" aria-pressed="false"></button>
+        <button type="button" data-f="include" aria-pressed="false"></button>
+        <button type="button" data-f="partial" aria-pressed="false"></button>
+        <button type="button" data-f="exclude" aria-pressed="false"></button>
+      </div>
+      <button type="button" class="primary" data-done>I’m done</button>
+    </div>
+    <p class="stale" id="stale" hidden>You changed something after your last hand-over. Click “I’m done” again so the AI gets your latest choices.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="sheet-tools">
+    <button type="button" class="linklike" id="open-all">Open every company</button>
+    <button type="button" class="linklike" id="fold-all">Fold every company that is all include or all exclude</button>
+  </div>
+  <main class="sheet" id="list">
+    <div class="cols" aria-hidden="true"><span>Company</span><span class="rest"><span>Sender</span><span>Advice</span><span>Your choice</span></span></div>
+    <p class="empty" id="empty" hidden>No sender matches. Clear the search or pick another filter.</p>
+  </main>
+
+  <footer class="close">
+    <button type="button" class="primary" data-done>I’m done</button>
+    <p>This page works offline. It has no internet access, so it cannot send anything anywhere; your choices are kept only in this browser, on this computer. Close it and open the same file later: your choices will still be here.</p>
+    <div class="confirm" id="reset-area">
+      <button type="button" class="linklike" id="reset">Put every sender back to the advice</button>
+    </div>
+  </footer>
+</div>
+
+<dialog id="handover" aria-labelledby="handover-title">
+  <h2 id="handover-title">Hand your choices to the AI</h2>
+  <p id="handover-summary"></p>
+  <p id="handover-status"></p>
+  <textarea id="handover-text" readonly aria-label="Your choices, as handed to the AI"></textarea>
+  <div class="actions">
+    <button type="button" class="primary" id="copy">Copy again</button>
+    <button type="button" class="secondary" id="keep">Keep choosing</button>
+  </div>
+  <p class="fine">Your choices stay saved in this browser. If you change something later, click “I’m done” again and paste the new text.</p>
+</dialog>
+
+<script type="application/json" id="sweep-data">__SWEEP_DATA__</script>
+<script>
+(function () {
+  'use strict';
+  const list = document.getElementById('list');
+  const raw = document.getElementById('sweep-data').textContent.trim();
+  if (raw.charAt(0) !== '{') {
+    list.textContent = 'This is the empty template. The sweep script fills it in: mail_sweep.py page <workdir>.';
+    return;
+  }
+  const DATA = JSON.parse(raw);
+  const S = DATA.senders;
+  const KEY = 'fiu-mail-sweep:' + DATA.sweep;
+  const VERDICTS = ['include', 'partial', 'exclude'];
+  const LABEL = { include: 'Include', partial: 'Partial', exclude: 'Exclude' };
+  const DONE = { include: 'included', partial: 'partial', exclude: 'excluded' };
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const SET_ASIDE = {
+    'newsletter-or-list': 'newsletters and mailing lists you never replied to',
+    'calendar-invite': 'calendar invites',
+    'notification-sender': 'automated mail from no-reply senders',
+    'fiu-internal-only': 'conversations with only FIU colleagues on them',
+    'holding-financial': 'paperwork around the holding companies (Software for Good, SFG, KMPI, RDPI, KIWI, shares, loans); you will see their subjects at the final check'
+  };
+  const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const plural = (n, one, many) => fmt(n) + ' ' + (n === 1 ? one : many);
+  const month = iso => iso && iso.length >= 7 ? MONTHS[+iso.slice(5, 7) - 1] + ' ' + iso.slice(0, 4) : '';
+  const known = new Set(S.map(s => s.a));
+
+  function el(tag, props, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(props || {})) {
+      if (key === 'class') node.className = value;
+      else if (key === 'text') node.textContent = value;
+      else node.setAttribute(key, value);
+    }
+    for (const child of children) if (child !== null && child !== undefined) node.append(child);
+    return node;
+  }
+
+  // State, in this browser only: the owner's explicit choice per address, and which
+  // companies they opened or folded themselves.
+  const state = { choices: {}, open: {}, saved: null, handedOver: null };
+  let storage = true;
+  function load() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (!stored) return;
+      state.choices = {};
+      for (const [address, verdict] of Object.entries(stored.choices || {})) {
+        if (known.has(address) && VERDICTS.includes(verdict)) state.choices[address] = verdict;
+      }
+      state.open = stored.open && typeof stored.open === 'object' ? stored.open : {};
+      state.saved = stored.saved || null;
+      state.handedOver = stored.handedOver || null;
+    } catch (error) {
+      storage = false;
+    }
+  }
+  function save() {
+    state.saved = new Date().toISOString();
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ v: 2, choices: state.choices, open: state.open, saved: state.saved, handedOver: state.handedOver }));
+      storage = true;
+    } catch (error) {
+      storage = false;
+    }
+    showSaved();
+  }
+  function showSaved() {
+    const node = document.getElementById('saved');
+    node.classList.toggle('warn', !storage);
+    if (!storage) {
+      node.textContent = 'Not saving: this browser blocks storage for this page. Finish in one go, or open the file in Chrome or Firefox.';
+    } else if (state.saved) {
+      node.textContent = 'Saved in this browser at ' + new Date(state.saved).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else {
+      node.textContent = 'Your choices save in this browser as you go';
+    }
+  }
+
+  const choiceOf = i => state.choices[S[i].a] || S[i].adv;
+
+  // Groups: one per domain, the highest mail volume first. Private mail services and
+  // colleagues are named as such; a private service gets no "everyone at" control.
+  const byKey = new Map();
+  S.forEach((sender, i) => {
+    const key = sender.k === 'self' ? '(self)' : sender.d;
+    if (!byKey.has(key)) byKey.set(key, { key: key, kind: sender.k, members: [], mails: 0 });
+    const group = byKey.get(key);
+    group.members.push(i);
+    group.mails += sender.m;
+  });
+  const groups = [...byKey.values()].sort((a, b) => b.mails - a.mails || a.key.localeCompare(b.key));
+  const groupOf = [];
+  groups.forEach((group, index) => {
+    group.index = index;
+    group.members.sort((x, y) => S[y].m - S[x].m || S[x].a.localeCompare(S[y].a));
+    group.members.forEach(i => { groupOf[i] = group; });
+  });
+
+  function uniform(group) {
+    const first = choiceOf(group.members[0]);
+    return group.members.every(i => choiceOf(i) === first) ? first : null;
+  }
+  // A company that is all include or all exclude starts folded; the owner's own open or
+  // fold click wins from then on.
+  const settled = group => ['include', 'exclude'].includes(uniform(group));
+  const isOpen = group => (group.key in state.open ? state.open[group.key] : group.openAtStart);
+
+  function segmented(label, advised) {
+    const box = el('div', { class: 'seg', role: 'group', 'aria-label': label });
+    for (const verdict of VERDICTS) {
+      const button = el('button', { type: 'button', 'data-v': verdict, 'aria-pressed': 'false', text: LABEL[verdict] });
+      if (verdict === advised) {
+        button.classList.add('advised');
+        button.title = 'The AI advised this';
+      }
+      box.append(button);
+    }
+    return box;
+  }
+
+  const rows = [];
+  function buildRow(i) {
+    const sender = S[i];
+    const facts = plural(sender.m, 'mail', 'mails') + ' in ' + plural(sender.t, 'conversation', 'conversations') +
+      (sender.l ? ', last in ' + month(sender.l) : '');
+    const who = el('div', { class: 'who' },
+      el('p', { class: 'name', text: sender.k === 'self' ? 'Mail to yourself' : (sender.n || sender.a) }),
+      sender.n ? el('p', { class: 'addr', text: sender.a }) : null,
+      el('p', { class: 'facts', text: facts }),
+      sender.x.length ? el('p', { class: 'examples', title: sender.x.join('\n'), text: sender.x.map(x => '“' + x + '”').join(', ') }) : null);
+    const advice = el('div', { class: 'advice' },
+      el('span', { class: 'verdict', text: LABEL[sender.adv] }),
+      sender.why ? el('span', { class: 'why', text: sender.why }) : null);
+    const control = segmented('Your choice for ' + (sender.n || sender.a), sender.adv);
+    const consequence = el('p', { class: 'consequence' });
+    const changedNote = el('p', { class: 'changed-note' }, 'Changed by you. ',
+      el('button', { type: 'button', class: 'linklike', 'data-back': '', text: 'Back to the advice' }));
+    const row = el('article', { class: 'line', 'data-i': String(i) }, who, advice,
+      el('div', { class: 'choice' }, control, consequence, changedNote));
+    rows[i] = { row: row, control: control, consequence: consequence, changedNote: changedNote };
+    return row;
+  }
+
+  // Every company has one summary line: a folded company shows only that line, an open one
+  // with several senders shows it above them as the "everyone at" line.
+  function buildGroup(group) {
+    const multi = group.members.length > 1;
+    const first = S[group.members[0]];
+    const fold = el('button', { type: 'button', class: 'fold', 'aria-expanded': 'false' });
+    if (group.kind === 'self') fold.append('Yourself');
+    else group.key.split('.').forEach((part, n) => {
+      if (n) fold.append('.', document.createElement('wbr'));
+      fold.append(part);
+    });
+    const company = el('div', { class: 'company' }, el('h2', {}, fold));
+    if (group.kind === 'private') company.append(el('p', { text: 'Private addresses: not a company, so choose per person' }));
+    if (group.kind === 'colleague') company.append(el('p', { text: 'Your colleagues at FIU' }));
+    if (group.kind === 'self') company.append(el('p', { text: 'Mail you sent only to yourself' }));
+    company.append(el('p', { text: plural(group.members.length, 'sender', 'senders') + ', ' + plural(group.mails, 'mail', 'mails') }));
+
+    const names = group.members.map(i => (S[i].k === 'self' ? 'Mail to yourself' : S[i].n || S[i].a));
+    const preview = el('p', { class: 'names' });
+    if (multi) {
+      preview.append(el('span', { class: 'name', text: names.slice(0, 2).join(', ') }),
+        names.length > 2 ? ' and ' + fmt(names.length - 2) + ' more' : '',
+        el('span', { class: 'count', text: '  ' + plural(group.mails, 'mail', 'mails') }));
+    } else {
+      preview.append(el('span', { class: 'name', text: names[0] }),
+        first.n ? ' ' + first.a : '',
+        el('span', { class: 'count', text: '  ' + plural(first.m, 'mail', 'mails') }));
+    }
+    const advised = group.members.every(i => S[i].adv === first.adv) ? first.adv : null;
+    const reasons = new Set(group.members.map(i => S[i].why));
+    const advice = el('div', { class: 'advice' },
+      el('span', { class: 'verdict', text: advised ? LABEL[advised] : 'Mixed advice' }),
+      advised && reasons.size === 1 && first.why ? el('span', { class: 'why', text: first.why }) : null);
+    const control = group.kind === 'private' && multi ? null
+      : segmented(multi ? 'Everyone at ' + group.key : 'Your choice for ' + names[0], advised);
+    const choice = el('div', { class: 'choice' });
+    if (control && multi) choice.append(el('p', { class: 'everyone', text: 'Everyone at ' + group.key }));
+    const mixed = el('p', { class: 'mixed' });
+    const consequence = el('p', { class: 'consequence' });
+    const changedNote = el('p', { class: 'changed-note' }, 'Changed by you. ',
+      el('button', { type: 'button', class: 'linklike', 'data-back-group': '', text: 'Back to the advice' }));
+    choice.append(control || '', mixed, consequence, changedNote);
+    const summary = el('div', { class: 'line summary' }, el('div', { class: 'who' }, preview), advice, choice);
+    const members = el('div', { class: 'members' });
+    group.members.forEach(i => members.append(buildRow(i)));
+    group.el = el('section', { class: 'group' }, company, el('div', { class: 'rest' }, summary, members));
+    Object.assign(group, { multi: multi, fold: fold, summary: summary, control: control, mixed: mixed, consequence: consequence, changedNote: changedNote });
+    return group.el;
+  }
+
+  function paintRow(i) {
+    const sender = S[i], row = rows[i], choice = choiceOf(i);
+    for (const button of row.control.children) button.setAttribute('aria-pressed', String(button.dataset.v === choice));
+    const changed = choice !== sender.adv;
+    row.row.classList.toggle('changed', changed);
+    row.changedNote.hidden = !changed;
+  }
+  function paintGroup(group) {
+    const only = uniform(group);
+    if (group.control) {
+      for (const button of group.control.children) button.setAttribute('aria-pressed', String(button.dataset.v === only));
+    }
+    let text = '';
+    if (group.multi && (!only || !group.control)) {
+      const n = { include: 0, partial: 0, exclude: 0 };
+      group.members.forEach(i => { n[choiceOf(i)] += 1; });
+      text = only ? 'All ' + DONE[only] : VERDICTS.filter(v => n[v]).map(v => fmt(n[v]) + ' ' + DONE[v]).join(', ');
+      if (!isOpen(group)) text += ': open to choose per person';
+    }
+    group.mixed.textContent = text;
+    group.mixed.hidden = !text;
+    const changed = group.members.some(i => choiceOf(i) !== S[i].adv);
+    group.summary.classList.toggle('changed', changed);
+    group.changedNote.hidden = !changed;
+  }
+
+  // Where every conversation lands: a partial sender on it sends it to the AI; otherwise
+  // include beats exclude; only excluded senders alone keep it out.
+  function tally() {
+    const total = { in: 0, read: 0, out: 0 };
+    const per = S.map(() => ({ in: 0, read: 0, out: 0 }));
+    const perGroup = groups.map(() => ({ in: 0, read: 0, out: 0 }));
+    for (const thread of DATA.threads) {
+      let partial = false, included = false;
+      for (const i of thread) {
+        const choice = choiceOf(i);
+        if (choice === 'partial') partial = true;
+        else if (choice === 'include') included = true;
+      }
+      const where = partial ? 'read' : included ? 'in' : 'out';
+      total[where] += 1;
+      const counted = new Set();
+      for (const i of thread) {
+        per[i][where] += 1;
+        if (!counted.has(groupOf[i].index)) {
+          counted.add(groupOf[i].index);
+          perGroup[groupOf[i].index][where] += 1;
+        }
+      }
+    }
+    return { total: total, per: per, perGroup: perGroup };
+  }
+  const them = n => (n === 1 ? 'it' : 'them');
+  const go = n => (n === 1 ? 'goes' : 'go');
+  function consequence(choice, n) {
+    if (choice === 'include') {
+      return n.read ? plural(n.read, 'conversation', 'conversations') + ' ' + go(n.read) + ' to the AI first: a partial sender is on ' + them(n.read) + '.' : '';
+    }
+    if (choice === 'exclude') {
+      const parts = [];
+      if (n.in) parts.push(plural(n.in, 'conversation', 'conversations') + ' still ' + go(n.in) + ' in: an included sender is on ' + them(n.in));
+      if (n.read) parts.push(fmt(n.read) + ' ' + go(n.read) + ' to the AI: a partial sender is on ' + them(n.read));
+      return parts.length ? parts.join('; ') + '.' : '';
+    }
+    return n.read === 1 ? 'The AI reads this conversation.' : 'The AI reads each of these ' + fmt(n.read) + ' conversations.';
+  }
+
+  let lastTotal = null;
+  function paintTotals() {
+    const result = tally();
+    S.forEach((_, i) => {
+      const text = consequence(choiceOf(i), result.per[i]);
+      rows[i].consequence.textContent = text;
+      rows[i].consequence.hidden = !text;
+    });
+    groups.forEach(group => {
+      const only = uniform(group);
+      const text = only ? consequence(only, result.perGroup[group.index]) : '';
+      group.consequence.textContent = text;
+      group.consequence.hidden = !text;
+    });
+    for (const where of ['in', 'read', 'out']) {
+      document.getElementById('bar-' + where).style.flexGrow = String(result.total[where]);
+      const holder = document.getElementById('count-' + where);
+      holder.querySelector('b').textContent = fmt(result.total[where]);
+      if (lastTotal && lastTotal[where] !== result.total[where]) {
+        holder.classList.remove('flash');
+        void holder.offsetWidth;
+        holder.classList.add('flash');
+      }
+    }
+    lastTotal = result.total;
+    paintFilters();
+    paintStale();
+    return result.total;
+  }
+
+  let filter = 'all', query = '';
+  function counts() {
+    const n = { include: 0, partial: 0, exclude: 0, changed: 0 };
+    S.forEach((sender, i) => {
+      const choice = choiceOf(i);
+      n[choice] += 1;
+      if (choice !== sender.adv) n.changed += 1;
+    });
+    return n;
+  }
+  function paintFilters() {
+    const n = counts();
+    for (const button of document.getElementById('filters').children) {
+      const f = button.dataset.f;
+      if (f === 'changed') button.textContent = 'Changed by you (' + fmt(n.changed) + ')';
+      else if (f !== 'all') button.textContent = LABEL[f] + ' (' + fmt(n[f]) + ')';
+      button.setAttribute('aria-pressed', String(f === filter));
+    }
+  }
+  function matches(i) {
+    const sender = S[i], choice = choiceOf(i);
+    if (filter === 'changed' && choice === sender.adv) return false;
+    if (VERDICTS.includes(filter) && choice !== filter) return false;
+    return !query || (sender.a + ' ' + sender.n + ' ' + sender.d).toLowerCase().includes(query);
+  }
+  // Searching or filtering opens every company with a match; clearing it restores the folds.
+  function paintVisibility() {
+    const active = Boolean(query) || filter !== 'all';
+    let shown = 0;
+    for (const group of groups) {
+      const open = active || isOpen(group);
+      let any = false;
+      for (const i of group.members) {
+        const hit = !active || matches(i);
+        rows[i].row.hidden = !(open && hit);
+        any = any || hit;
+      }
+      group.el.hidden = !any;
+      group.el.classList.toggle('folded', !open);
+      group.summary.hidden = open && !group.multi;
+      group.fold.setAttribute('aria-expanded', String(open));
+      group.fold.disabled = active;
+      if (any) shown += 1;
+      paintGroup(group);
+    }
+    document.getElementById('empty').hidden = shown > 0;
+    paintFilters();
+  }
+
+  function changed(indexes) {
+    save();
+    const touched = new Set();
+    indexes.forEach(i => { paintRow(i); touched.add(groupOf[i]); });
+    touched.forEach(paintGroup);
+    paintTotals();
+  }
+  function choose(indexes, verdict) {
+    indexes.forEach(i => { state.choices[S[i].a] = verdict; });
+    changed(indexes);
+  }
+  function back(indexes) {
+    indexes.forEach(i => { delete state.choices[S[i].a]; });
+    changed(indexes);
+  }
+  // A folded company that stops being all include or all exclude opens, so the owner sees
+  // who it concerns.
+  function unfoldIfUnsettled(group) {
+    if (!isOpen(group) && !settled(group)) {
+      state.open[group.key] = true;
+      save();
+      paintVisibility();
+    }
+  }
+
+  // The hand-over: every sender whose choice differs from the advice, plus totals so a
+  // cut-off paste is caught. The AI records it with mail_sweep.py record-choices.
+  function handoverText() {
+    const lines = ['FIU mail sweep: my choices', 'sweep ' + DATA.sweep + ' | advice ' + DATA.advice + ' | ' + S.length + ' senders'];
+    const listed = [];
+    S.forEach((sender, i) => {
+      const choice = choiceOf(i);
+      if (choice !== sender.adv) listed.push((choice + '  ').padEnd(9) + sender.a + '  (advice: ' + sender.adv + ')');
+    });
+    const n = counts();
+    lines.push('changed: ' + listed.length, ...listed,
+      'totals: include ' + n.include + ' | partial ' + n.partial + ' | exclude ' + n.exclude, 'end of choices');
+    return lines.join('\n');
+  }
+  function paintStale() {
+    document.getElementById('stale').hidden = !state.handedOver || state.handedOver === handoverText();
+  }
+
+  const dialog = document.getElementById('handover');
+  const area = document.getElementById('handover-text');
+  const status = document.getElementById('handover-status');
+  async function copy() {
+    let done = false;
+    try {
+      await navigator.clipboard.writeText(area.value);
+      done = true;
+    } catch (error) {
+      area.focus();
+      area.select();
+      try { done = document.execCommand('copy'); } catch (ignored) { done = false; }
+    }
+    status.className = done ? 'copied' : '';
+    status.textContent = done
+      ? 'Copied. Paste it into the chat with the AI: nothing is processed until you do.'
+      : 'Select all the text below and copy it, then paste it into the chat with the AI. Nothing is processed until you do.';
+  }
+  function openHandover() {
+    const total = tally().total, n = counts();
+    area.value = handoverText();
+    document.getElementById('handover-summary').textContent =
+      plural(n.include, 'sender', 'senders') + ' included, ' + fmt(n.partial) + ' partial, ' + fmt(n.exclude) +
+      ' excluded; you changed ' + plural(n.changed, 'sender', 'senders') + ' from the advice. ' +
+      fmt(total.in) + ' conversations go into the brain unread, the AI reads ' + fmt(total.read) + ' first, and ' +
+      fmt(total.out) + ' stay out.';
+    state.handedOver = area.value;
+    save();
+    paintStale();
+    if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
+    copy();
+  }
+
+  // Build the page.
+  const owners = DATA.owners.join(' and ');
+  const period = DATA.period ? ', mail from ' + month(DATA.period[0]) + ' to ' + month(DATA.period[1]) : '';
+  const asideTotal = Object.values(DATA.setAside).reduce((a, b) => a + b, 0);
+  document.getElementById('lede').textContent = 'Mailbox of ' + owners + period + '. Of its ' + fmt(DATA.conversations) +
+    ' conversations, ' + fmt(asideTotal) + ' were set aside before this list, unread. The ' + fmt(DATA.threads.length) +
+    ' that are left are with the ' + plural(S.length, 'sender', 'senders') + ' below. You decide for each of them.';
+  document.getElementById('set-aside-summary').textContent = 'What was set aside, unread (' + fmt(asideTotal) + ' conversations)';
+  for (const kind of Object.keys(SET_ASIDE)) {
+    if (DATA.setAside[kind]) {
+      document.getElementById('set-aside-list').append(el('li', { text: fmt(DATA.setAside[kind]) + ' ' + SET_ASIDE[kind] }));
+    }
+  }
+  document.getElementById('set-aside').hidden = !asideTotal;
+
+  load();
+  list.append(...groups.map(buildGroup));
+  groups.forEach(group => { group.openAtStart = !settled(group); });
+  S.forEach((_, i) => paintRow(i));
+  paintVisibility();
+  paintTotals();
+  showSaved();
+
+  list.addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    const owner = groups.find(group => group.el === button.closest('.group'));
+    if (!owner) return;
+    const row = button.closest('.line[data-i]');
+    if (button.classList.contains('fold')) {
+      state.open[owner.key] = !isOpen(owner);
+      save();
+      paintVisibility();
+    } else if (button.dataset.v) {
+      choose(row ? [Number(row.dataset.i)] : owner.members, button.dataset.v);
+      if (!row) unfoldIfUnsettled(owner);
+    } else if (button.hasAttribute('data-back') && row) {
+      back([Number(row.dataset.i)]);
+    } else if (button.hasAttribute('data-back-group')) {
+      back(owner.members);
+      unfoldIfUnsettled(owner);
+    }
+  });
+  document.getElementById('search').addEventListener('input', event => {
+    query = event.target.value.trim().toLowerCase();
+    paintVisibility();
+  });
+  document.getElementById('filters').addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    filter = button.dataset.f;
+    paintVisibility();
+  });
+  document.getElementById('open-all').addEventListener('click', () => {
+    groups.forEach(group => { state.open[group.key] = true; });
+    save();
+    paintVisibility();
+  });
+  document.getElementById('fold-all').addEventListener('click', () => {
+    groups.forEach(group => { if (settled(group)) state.open[group.key] = false; });
+    save();
+    paintVisibility();
+  });
+  document.querySelectorAll('[data-done]').forEach(button => button.addEventListener('click', openHandover));
+  document.getElementById('copy').addEventListener('click', copy);
+  document.getElementById('keep').addEventListener('click', () => dialog.close());
+
+  const resetArea = document.getElementById('reset-area');
+  document.getElementById('reset').addEventListener('click', () => {
+    resetArea.replaceChildren(
+      el('span', { text: 'This puts all ' + plural(counts().changed, 'sender', 'senders') + ' you changed back to the advice.' }),
+      el('button', { type: 'button', class: 'secondary', id: 'reset-yes', text: 'Put them back' }),
+      el('button', { type: 'button', class: 'secondary', id: 'reset-no', text: 'Keep my changes' }));
+    document.getElementById('reset-yes').addEventListener('click', () => {
+      state.choices = {};
+      save();
+      location.reload();
+    });
+    document.getElementById('reset-no').addEventListener('click', () => location.reload());
+  });
+
+  // Another tab with the same page changed something: follow it.
+  window.addEventListener('storage', event => {
+    if (event.key !== KEY) return;
+    load();
+    S.forEach((_, i) => paintRow(i));
+    paintVisibility();
+    paintTotals();
+    showSaved();
+  });
+})();
+</script>
+</body>
+</html>

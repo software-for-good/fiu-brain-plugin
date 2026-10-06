@@ -48,14 +48,15 @@ HEADER_FIELDS = {
 DERIVED_HEADING = re.compile(r"^#*\s*(summary|samenvatting|transcript|notes)\s*$", re.I)
 SUMMARY_HEADING = re.compile(r"^#*\s*(summary|samenvatting)\b", re.I | re.M)
 ADDRESS = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
-# Financial/legal matters around the holding companies (SFG and KMPI/RDPI/KIWI): loans,
-# shareholder documents, registry paperwork. Same screen as mail_sweep.py; keep them identical.
+# Financial/legal matters around the holding companies (SFG, written out as Software for
+# Good, and KMPI/RDPI/KIWI): loans, shareholder documents. Bare "kvk" is not on the list:
+# Dutch partners print their KvK number everywhere. Same screen as mail_sweep.py; keep them identical.
 HOLDING_FINANCIAL = re.compile(
     r"(?i:\b(?:kmpi|rdpi)\b)"
     r"|\bKIWI\b"
     r"|(?i:\bkiwi\s*(?:b\.?\s?v\.?\b|holding|beheer))"
     r"|(?i:aandeelhoud|leningsovereenkomst|geldlening)"
-    r"|(?i:software ?for ?good|\bkvk\b)"
+    r"|(?i:software ?for ?good)|\bSFG\b"
 )
 
 
