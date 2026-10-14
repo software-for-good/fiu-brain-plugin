@@ -149,6 +149,10 @@ h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 4.2vw
 .seg button[data-v="exclude"][aria-pressed="true"] { background: var(--aubergine); border-color: var(--aubergine); }
 .consequence { margin: 0; font-size: 13px; color: var(--ink-soft); max-width: 38ch; }
 .changed-note { margin: 0; font-size: 13px; color: var(--pen); }
+.mark { display: block; margin-top: 6px; border: 0; background: none; padding: 0; font-size: 12.5px; color: var(--pencil); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; text-align: left; }
+.group.marked { box-shadow: inset 4px 0 0 var(--pen); }
+.group.marked .mark { color: var(--pen); font-weight: 700; }
+.go-mark { border: 1px solid var(--pen); background: none; color: var(--pen); padding: 4px 10px; border-radius: 4px; font: inherit; font-size: 13.5px; cursor: pointer; }
 .linklike { border: 0; background: none; padding: 0; color: var(--pen); text-decoration: underline; text-underline-offset: 2px; }
 .empty { padding: 36px 18px; color: var(--ink-soft); }
 
@@ -197,7 +201,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
       <div class="tray-partial"><dt>Partial</dt><dd>The AI reads every conversation this sender is on, whoever else is on it, and leaves out what doesn’t belong.</dd></div>
       <div class="tray-exclude"><dt>Exclude</dt><dd>Conversations with only excluded senders stay out, and nobody reads them. Include wins: with an included sender on it, a conversation goes in anyway.</dd></div>
     </dl>
-    <p class="pencil-ink">The AI’s advice is in <span class="pencil">pencil</span>, your choice is in <span class="ink">ink</span>. A sender you leave alone keeps the advice; you can change any of them. A company where everyone is included, or everyone excluded, is folded into one line: click its name to see who is in it.</p>
+    <p class="pencil-ink">The AI’s advice is in <span class="pencil">pencil</span>, your choice is in <span class="ink">ink</span>. A sender you leave alone keeps the advice; you can change any of them. Every company starts folded into one line: click its name to see who is in it.</p>
     <details class="set-aside" id="set-aside"><summary id="set-aside-summary"></summary><ul id="set-aside-list"></ul></details>
   </header>
 </div>
@@ -219,6 +223,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
         <button type="button" data-f="partial" aria-pressed="false"></button>
         <button type="button" data-f="exclude" aria-pressed="false"></button>
       </div>
+      <button type="button" class="go-mark" id="go-mark" hidden>Go to my mark</button>
       <button type="button" class="primary" data-done>I’m done</button>
     </div>
     <p class="stale" id="stale" hidden>You changed something after your last hand-over. Click “I’m done” again so the AI gets your latest choices.</p>
@@ -228,7 +233,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
 <div class="wrap">
   <div class="sheet-tools">
     <button type="button" class="linklike" id="open-all">Open every company</button>
-    <button type="button" class="linklike" id="fold-all">Fold every company that is all include or all exclude</button>
+    <button type="button" class="linklike" id="fold-all">Fold every company</button>
   </div>
   <main class="sheet" id="list">
     <div class="cols" aria-hidden="true"><span>Company</span><span class="rest"><span>Sender</span><span>Advice</span><span>Your choice</span></span></div>
@@ -296,9 +301,9 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     return node;
   }
 
-  // State, in this browser only: the owner's explicit choice per address, and which
-  // companies they opened or folded themselves.
-  const state = { choices: {}, open: {}, saved: null, handedOver: null };
+  // State, in this browser only: the owner's explicit choice per address and their mark.
+  // Which companies they opened or folded lives in this tab only, so every load starts folded.
+  const state = { choices: {}, open: {}, saved: null, handedOver: null, mark: null };
   let storage = true;
   function load() {
     try {
@@ -308,9 +313,9 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
       for (const [address, verdict] of Object.entries(stored.choices || {})) {
         if (known.has(address) && VERDICTS.includes(verdict)) state.choices[address] = verdict;
       }
-      state.open = stored.open && typeof stored.open === 'object' ? stored.open : {};
       state.saved = stored.saved || null;
       state.handedOver = stored.handedOver || null;
+      state.mark = typeof stored.mark === 'string' ? stored.mark : null;
     } catch (error) {
       storage = false;
     }
@@ -318,7 +323,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
   function save() {
     state.saved = new Date().toISOString();
     try {
-      localStorage.setItem(KEY, JSON.stringify({ v: 2, choices: state.choices, open: state.open, saved: state.saved, handedOver: state.handedOver }));
+      localStorage.setItem(KEY, JSON.stringify({ v: 2, choices: state.choices, saved: state.saved, handedOver: state.handedOver, mark: state.mark }));
       storage = true;
     } catch (error) {
       storage = false;
@@ -361,10 +366,9 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     const first = choiceOf(group.members[0]);
     return group.members.every(i => choiceOf(i) === first) ? first : null;
   }
-  // A company that is all include or all exclude starts folded; the owner's own open or
-  // fold click wins from then on.
+  // Every company starts folded; the owner's own open or fold click wins from then on.
   const settled = group => ['include', 'exclude'].includes(uniform(group));
-  const isOpen = group => (group.key in state.open ? state.open[group.key] : group.openAtStart);
+  const isOpen = group => Boolean(state.open[group.key]);
 
   function segmented(label, advised) {
     const box = el('div', { class: 'seg', role: 'group', 'aria-label': label });
@@ -418,6 +422,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     if (group.kind === 'colleague') company.append(el('p', { text: 'Your colleagues at FIU' }));
     if (group.kind === 'self') company.append(el('p', { text: 'Mail you sent only to yourself' }));
     company.append(el('p', { text: plural(group.members.length, 'sender', 'senders') + ', ' + plural(group.mails, 'mail', 'mails') }));
+    company.append(el('button', { type: 'button', class: 'mark', 'data-mark': '', text: 'Mark my place here' }));
 
     const names = group.members.map(i => (S[i].k === 'self' ? 'Mail to yourself' : S[i].n || S[i].a));
     const preview = el('p', { class: 'names' });
@@ -469,7 +474,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
       const n = { include: 0, partial: 0, exclude: 0 };
       group.members.forEach(i => { n[choiceOf(i)] += 1; });
       text = only ? 'All ' + DONE[only] : VERDICTS.filter(v => n[v]).map(v => fmt(n[v]) + ' ' + DONE[v]).join(', ');
-      if (!isOpen(group)) text += ': open to choose per person';
+      if (!shownOpen(group)) text += ': open to choose per person';
     }
     group.mixed.textContent = text;
     group.mixed.hidden = !text;
@@ -574,12 +579,60 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     if (VERDICTS.includes(filter) && choice !== filter) return false;
     return !query || (sender.a + ' ' + sender.n + ' ' + sender.d).toLowerCase().includes(query);
   }
-  // Searching or filtering opens every company with a match; clearing it restores the folds.
+  // A filter keeps every fold as it is. A search opens the companies with a match, until the
+  // owner folds one again; clearing the search restores the folds.
+  const searchFolded = new Set();
+  const shownOpen = group => isOpen(group) || (Boolean(query) && !searchFolded.has(group.key));
+  function toggleFold(group) {
+    if (shownOpen(group)) {
+      state.open[group.key] = false;
+      if (query) searchFolded.add(group.key);
+    } else {
+      state.open[group.key] = true;
+      searchFolded.delete(group.key);
+    }
+    save();
+    paintVisibility();
+  }
+  // One bookmark: where the owner stopped, so a next session starts there with one click.
+  const markLabel = group => (group.kind === 'self' ? 'Yourself' : group.key);
+  function setMark(group) {
+    state.mark = state.mark === group.key ? null : group.key;
+    save();
+    paintMark();
+  }
+  function paintMark() {
+    let marked = null;
+    groups.forEach(group => {
+      const on = group.key === state.mark;
+      if (on) marked = group;
+      group.el.classList.toggle('marked', on);
+      group.el.querySelector('[data-mark]').textContent = on ? 'Your mark (click to remove)' : 'Mark my place here';
+    });
+    const go = document.getElementById('go-mark');
+    go.hidden = !marked;
+    if (marked) go.textContent = 'Go to my mark: ' + markLabel(marked);
+  }
+  function goToMark() {
+    const group = groups.find(g => g.key === state.mark);
+    if (!group) return;
+    if (filter !== 'all' || query) {
+      filter = 'all';
+      query = '';
+      document.getElementById('search').value = '';
+      searchFolded.clear();
+      paintVisibility();
+    }
+    const rack = document.querySelector('.rack');
+    group.el.style.scrollMarginTop = ((rack ? rack.offsetHeight : 0) + 12) + 'px';
+    group.el.scrollIntoView({ block: 'start' });
+    group.fold.focus({ preventScroll: true });
+  }
   function paintVisibility() {
     const active = Boolean(query) || filter !== 'all';
     let shown = 0;
     for (const group of groups) {
-      const open = active || isOpen(group);
+      const open = shownOpen(group);
       let any = false;
       for (const i of group.members) {
         const hit = !active || matches(i);
@@ -590,7 +643,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
       group.el.classList.toggle('folded', !open);
       group.summary.hidden = open && !group.multi;
       group.fold.setAttribute('aria-expanded', String(open));
-      group.fold.disabled = active;
+      group.fold.disabled = false;
       if (any) shown += 1;
       paintGroup(group);
     }
@@ -691,11 +744,12 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
 
   load();
   list.append(...groups.map(buildGroup));
-  groups.forEach(group => { group.openAtStart = !settled(group); });
   S.forEach((_, i) => paintRow(i));
   paintVisibility();
   paintTotals();
   showSaved();
+  paintMark();
+  document.getElementById('go-mark').addEventListener('click', goToMark);
 
   list.addEventListener('click', event => {
     const button = event.target.closest('button');
@@ -703,10 +757,10 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     const owner = groups.find(group => group.el === button.closest('.group'));
     if (!owner) return;
     const row = button.closest('.line[data-i]');
-    if (button.classList.contains('fold')) {
-      state.open[owner.key] = !isOpen(owner);
-      save();
-      paintVisibility();
+    if (button.hasAttribute('data-mark')) {
+      setMark(owner);
+    } else if (button.classList.contains('fold')) {
+      toggleFold(owner);
     } else if (button.dataset.v) {
       choose(row ? [Number(row.dataset.i)] : owner.members, button.dataset.v);
       if (!row) unfoldIfUnsettled(owner);
@@ -719,6 +773,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
   });
   document.getElementById('search').addEventListener('input', event => {
     query = event.target.value.trim().toLowerCase();
+    searchFolded.clear();
     paintVisibility();
   });
   document.getElementById('filters').addEventListener('click', event => {
@@ -729,11 +784,12 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
   });
   document.getElementById('open-all').addEventListener('click', () => {
     groups.forEach(group => { state.open[group.key] = true; });
+    searchFolded.clear();
     save();
     paintVisibility();
   });
   document.getElementById('fold-all').addEventListener('click', () => {
-    groups.forEach(group => { if (settled(group)) state.open[group.key] = false; });
+    groups.forEach(group => { state.open[group.key] = false; searchFolded.add(group.key); });
     save();
     paintVisibility();
   });
@@ -763,6 +819,7 @@ dialog .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
     paintVisibility();
     paintTotals();
     showSaved();
+    paintMark();
   });
 })();
 </script>
