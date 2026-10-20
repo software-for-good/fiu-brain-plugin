@@ -5,7 +5,7 @@ user-invocable: false
 
 # Process the queue
 
-You process source (raws) into knowledge. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` before anything else.
+You process source (raws) into knowledge. Reading goes source by source, delivery per round, resume-safe. This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, load `fiu:guardrails` before anything else, then establish who you work with. Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop.
 
 Load `fiu:extraction-rules` before the first source is fetched. It owns what counts as an atom and how one is written, labelled, scoped and compared with the brain; this skill never restates those rules, it names the step and sets when it runs. What is left here is the loop: which sources, in what order, how they are fetched, how a round is shown and confirmed, and what is written back.
 

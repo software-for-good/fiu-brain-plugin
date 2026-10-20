@@ -8,17 +8,17 @@ compatibility: Claude Code only. This skill writes permission rules into the per
 
 **Claude Code only.** Before anything else: if this session is not Claude Code, say in one line that this skill only has work to do in Claude Code, and stop. The rules it writes live in the Claude Code settings file, which Cowork and the Claude apps do not have. Nothing below applies there.
 
-Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else. The guardrails that `/start` renders into its own text come through `tail`, one of the commands Claude Code treats as read-only in every mode; that needs no rule, so none is written for it.
+Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else.
 
 ## 1. Who
 
-Take the identity from the `whoami:` line of the server instructions, as `/start` does. If the line is missing, the connector is not connected: say so and stop.
+Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop.
 
 ## 2. The rules this account earns
 
 Every account with brain access:
 
-- `mcp__fiu-brain__labels`, `mcp__fiu-brain__context_pack`, `mcp__fiu-brain__search`, `mcp__fiu-brain__index`, `mcp__fiu-brain__get`, `mcp__fiu-brain__list_raws`, `mcp__fiu-brain__generate_image`
+- `mcp__fiu-brain__whoami`, `mcp__fiu-brain__labels`, `mcp__fiu-brain__context_pack`, `mcp__fiu-brain__search`, `mcp__fiu-brain__index`, `mcp__fiu-brain__get`, `mcp__fiu-brain__list_raws`, `mcp__fiu-brain__generate_image`
 - `Bash(python3 *mail_sweep.py *)` and `Bash(python3 *transcript_sweep.py *)`, the two local sweeps
 
 When `can_write` is true, add `mcp__fiu-brain__submit_atoms`, `mcp__fiu-brain__submit_raw`, `mcp__fiu-brain__update_atom`.

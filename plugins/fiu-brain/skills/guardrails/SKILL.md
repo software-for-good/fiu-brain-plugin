@@ -1,7 +1,7 @@
 ---
-description: The FIU quality bar for working with AI. Rendered into /start at the beginning of every session, and applied for the rest of it; a session that starts anywhere else loads this skill itself. In every FIU skill, "you" is the AI and "the human" is the person you work with.
+description: The FIU quality bar for working with AI. Copied into /start, so it applies from the beginning of every session to its end; a session that starts anywhere else loads this skill itself. In every FIU skill, "you" is the AI and "the human" is the person you work with.
 user-invocable: false
-# /start renders this file from line 6 (tail -n +6); keep this header five lines.
+# /start carries a copy of the body below; after editing it, copy it over and run the tests (README, Shared text).
 ---
 
 # Guardrails
