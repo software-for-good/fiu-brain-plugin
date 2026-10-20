@@ -11,7 +11,7 @@ Load `fiu:extraction-rules` before the first source is fetched. It owns what cou
 
 ## 1. Gate
 
-If the connector is missing, say so and stop. If the role is not `founder`, say kindly that only a founder can mark a source processed, that everything else in the brain works as normal for this account, and that `/start` offers the goals that fit; stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. Processing also needs a shell (Claude Code or Cowork) to fetch sources; without one, say so and stop.
+If the connector is missing, say so and stop. If the role is not `founder`, say kindly that only a founder can mark a source processed, that everything else in the brain works as normal for this account, and that `/start` offers the goals that fit; stop. If `can_write` is false, explain kindly that processing writes atoms and needs a brain-write token, and stop. Processing also needs a shell that reaches the brain's host to fetch sources: Claude Code does, Cowork once the human has allowed that host in the Claude settings (as for pictures). Without one, say so and stop.
 
 ## 2. Agree the scope
 
@@ -21,7 +21,9 @@ Ask two things in one message: which scope (one source type, or the whole queue)
 
 Call `list_raws` for the scope; it returns each source's id and the endpoint template. Fetch a source into a local file by curling the `endpoint` URL the listing returned, `{id}` filled in, sending the same bearer token the connector uses (it sits in the session's MCP config; in Claude Code, `claude mcp get fiu-brain`). Then read it locally and selectively: sections, a grep for a speaker or a topic, a slice at a time; re-reads cost nothing. One source at a time: fetch, read and extract it before touching the next. Read each source the way extraction rules step 1 prescribes for its type, and let the yields of step 2 decide how much of it is worth reading at all.
 
-A source that turns out personal or private yields nothing (extraction rules, step 7) and is proposed for deletion in the round's confirm step: a source without atoms can go, row and hosted file at once, and it is the human who says so. A source that contains a credential (a bearer token, a password) is proposed the same way, for deletion and for rotation. Until the human decides, the source is neither marked nor deleted.
+A source can carry attachments: a mail sent to brain@ arrives with the files it carried, and `list_raws` names them per source (position, name, mime, size) next to the `attachment_endpoint` template. They belong to the source: fetch each one together with it, `{id}` and `{position}` filled in, save it under its listed name so the extension tells its type, and read it in the context of the mail. Read a PDF or an image directly with the Read tool, a long PDF a range of pages at a time; read a spreadsheet or an office document through a short script. The source text ends with the same list of files.
+
+A source that turns out personal or private yields nothing (extraction rules, step 7) and is proposed for deletion in the round's confirm step: a source without atoms can go, row and hosted files at once, and it is the human who says so. A source that contains a credential (a bearer token, a password) is proposed the same way, for deletion and for rotation. Until the human decides, the source is neither marked nor deleted.
 
 ## 4. Extract
 
@@ -52,7 +54,7 @@ This step runs when the human types `/stop`, never before.
 
 `submit_atoms`, fix rejections, resubmit only those. Per source in the round, call `mark_raw_processed` once that source's atoms were accepted, or straight away when it has nothing to submit (zero candidates, everything dropped as duplicate or covered). A source is marked exactly when it needs no more work, so an interrupted run resumes cleanly instead of losing or duplicating work.
 
-A source the human agreed to delete is deleted instead of marked: `delete_raw` with its id removes the row and the hosted file in the same call, and the source is gone from the queue for good. The server refuses a source that any atom already cites; then mark it processed and flag it in the report for a founder to sort out by hand.
+A source the human agreed to delete is deleted instead of marked: `delete_raw` with its id removes the row and the hosted files, attachments included, in the same call, and the source is gone from the queue for good. The server refuses a source that any atom already cites; then mark it processed and flag it in the report for a founder to sort out by hand.
 
 Submit and mark every round before moving on: a source left unmarked is redone from scratch next run, and the corrections made on it are lost with it.
 

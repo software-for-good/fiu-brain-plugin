@@ -41,6 +41,8 @@ The source arrives in one of two ways. `/stop` gives you the session you are in,
 - A meeting transcript: read the transcript body. Ignore a generated summary block at the top, because knowledge is never built on a derived layer.
 - A Claude session: the whole session is the source, both what you produced and what the human said. What the human said weighs more than what you produced. A session that worked in a codebase yields its decisions and what people can now do; the code holds the how.
 - A mail thread: read the messages in order. Quoted text inside a reply repeats an earlier message, so read each message once. The last message holds the latest state of the thread.
+- A mail sent to brain@: a colleague chose to share it, mostly by putting brain@ in Bcc on a reply to a client. Their own message on top is what is new, and the From line says who speaks; the quoted thread under it is the context it answers. Each mail of a thread arrives as a source of its own, newest first, so the newest one usually covers the older ones.
+- An attachment: read it together with its mail, which says why it was sent. A contract, an offer or a deck is a document (below). A photo or a screenshot is read for what it shows. A spreadsheet or an export holds figures, which stay in the raw; what the mail says about them can become an atom.
 - A document, a deck or a storyline: read it as an argument. Only the decisions it records and the company-wide takeaways survive the bar; the argument itself does not.
 
 ## 2. Find what passes the bar
