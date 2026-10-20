@@ -13,7 +13,7 @@ If the goal did not name them, ask which client and which meeting in one questio
 
 ## 2. Pull
 
-`context_pack` once with those labels, the goal in English; `search` for the client name and the open threads. Read silently: company-wide atoms are company truth, scoped atoms are facts about one to a few named external parties, proposed atoms are not yet true and you say so whenever you lean on one. Present it as three short blocks, each line cited by filename: what we know, what is in motion, contradictions or gaps. Say in one line how fresh what the brain holds on this client is; when it holds nothing, say that plainly instead of filling the gap.
+`context_pack` once with those labels, the goal in English; `search` for the client name and the open threads. Read silently: company-wide atoms are company truth, scoped atoms are facts about one to a few named external parties, proposed atoms are not yet true and you say so whenever you lean on one. When the client has subscriptions with FIU, pull their current numbers too: `subscriptions.index` searched by the client's name, and `subscriptions.acceptancePercentage` for a subscription offered to influencers. Present it as short blocks, each line cited by atom filename or dataset: what we know, what is in motion, the current numbers when there are any, contradictions or gaps. Say in one line how fresh what the brain holds on this client is; when it holds nothing, say that plainly instead of filling the gap.
 
 ## 3. Think it through
 

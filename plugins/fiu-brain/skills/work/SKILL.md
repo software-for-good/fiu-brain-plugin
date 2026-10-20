@@ -13,8 +13,9 @@ Derive candidate labels from the goal and check them with the `labels` tool; nev
 
 ## 2. Work
 
-- Cite atoms by filename when you use them; say when the brain has nothing rather than inventing FIU facts. Knowledge about FIU comes from the brain and the human, nowhere else.
+- Cite atoms by filename when you use them; say when the brain has nothing rather than inventing FIU facts. Knowledge about FIU comes from the brain (its atoms and its datasets) and the human, nowhere else.
 - Look-up questions ("what do we know about X") get answered straight away, no friction: `search` with the right labels and English terms, answer from the atoms with filenames cited, nothing padded. If proposed atoms are all there is, answer with the caveat that founders have not confirmed them. End with the one-line source list.
+- Questions that need current ids or numbers (a client's websites and subscriptions, how far influencers accepted a campaign) go to the datasets: `datasets` lists them with their parameters, `dataset` runs one. Turn a name into ids with `websites.index` or `subscriptions.index` first. Quote every number with what it measures, from the definition the result carries, and name the dataset and today's date as its source: the numbers are live.
 - Generative work (a mail, a deck, a plan) waits until the human has given goal, audience and their own direction, per the guardrails.
 - Before the first file of the session is created, load `fiu:work-folder` and follow it. A session that only answers questions never loads it.
 - When the human states something that contradicts the brain, surface both and offer to record the correction at `/stop`.
