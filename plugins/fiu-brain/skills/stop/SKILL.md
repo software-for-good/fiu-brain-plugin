@@ -11,7 +11,7 @@ In a `fiu:process` session, the round the human confirmed there is the harvest: 
 
 ## 1. Gate
 
-Take the identity from the `whoami:` line of the server instructions. If the line is missing, the connector is not connected: say so and stop. If `can_write` is false, explain kindly that this account's token has no brain-write ability, that reading is unaffected, and that `php artisan brain:token` (a founder or developer runs it) issues a writing token. Stop.
+Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop. If `can_write` is false, explain kindly that this account's token has no brain-write ability, that reading is unaffected, and that `php artisan brain:token` (a founder or developer runs it) issues a writing token. Stop.
 
 ## 2. Extract
 

@@ -5,7 +5,7 @@ user-invocable: false
 
 # Approve company-wide atoms
 
-This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` before anything else.
+This flow is reached from `/start`, which established who you work with and carries the guardrails that apply for the whole session; reuse both. If this session did not run `/start`, load `fiu:guardrails` before anything else, then establish who you work with. Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop.
 
 A company-wide atom applies to everyone, so it enters as `proposed` and becomes company truth only here. Scoped atoms never pass through this flow; they are live from the moment they are accepted.
 

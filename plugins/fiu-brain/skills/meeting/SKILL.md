@@ -5,7 +5,7 @@ user-invocable: false
 
 # Prepare a client meeting
 
-`/start` established who you work with, and carries the guardrails that apply for the rest of the session; reuse both. If this session did not run `/start`, take the identity from the `whoami:` line of the server instructions and load `fiu:guardrails` first.
+`/start` established who you work with, and carries the guardrails that apply for the rest of the session; reuse both. If this session did not run `/start`, load `fiu:guardrails` first, then establish who you work with. Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop.
 
 ## 1. Resolve
 

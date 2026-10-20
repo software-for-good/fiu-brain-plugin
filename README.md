@@ -9,10 +9,11 @@ every session because both clients keep the plugin in sync:
 
 One plugin for everyone, two session commands: `/fiu:start` opens every session and `/fiu:stop` closes it.
 `/fiu:start` is a router: it takes the identity the server hands over at connect (the `whoami:` line of its
-instructions), establishes the goal (from its argument, or with one fixed question that offers only the goals fitting
-the role) and hands over to the skill for that path: `process` and `process-proposals` for founders, `meeting` for
-preparing a client meeting, `work` for questions and everything else. `/start` renders the `guardrails` into its own
-text, so they govern the session from its first words, the question of step 2 included, and every path inherits them;
+instructions, or the `whoami` tool where a client does not pass those instructions on), establishes the goal (from its
+argument, or with one fixed question that offers only the goals fitting the role) and hands over to the skill for that
+path: `process` and `process-proposals` for founders, `meeting` for preparing a client meeting, `work` for questions
+and everything else. `/start` carries a copy of the `guardrails` in its own text, so they govern the session from its
+first words, the question of step 2 included, and every path inherits them;
 `work-folder` (where files belong, when a project folder is made) is loaded only by a path that is about to create a
 file. All of those carry `user-invocable: false`: hidden from the command menu and not runnable by hand, loadable only
 by the AI. This is convenience, not security: the server checks each token's role and abilities on every tool call,
@@ -28,3 +29,24 @@ that the server's own role and ability checks make redundant). Run it again afte
 The plugin contains no hooks, executables, agents or MCP server configuration; the skills only call the
 FIU Brain connector the person already has (a custom connector or `claude mcp add` with a personal bearer
 token from `php artisan brain:token`). Nothing sensitive is stored here.
+
+## Shared text
+
+Some text has to be identical in several skills, and each skill carries its own copy. A skill cannot pull it in at
+load time: the Claude app's chat and Cowork do not run the shell lines that Claude Code expands inside a skill, so a
+`!` line there reaches the model as a bare command. The sources:
+
+- `plugins/fiu-brain/skills/guardrails/SKILL.md`: its body, everything below the frontmatter, is copied into `start`.
+- `shared/identity.md`: the identity step, copied into `start`, `stop`, `optimise`, `work`, `meeting`, `process` and
+  `process-proposals`.
+
+Edit the source, then copy the change into every skill that carries it. **Run the tests before every commit and
+push:**
+
+```
+python3 -m unittest discover -s tests
+```
+
+`tests/test_shared_text.py` fails, with a diff, until every copy matches its source word for word. The list of
+sources and copies is at the top of that file. `shared/` and `tests/` sit outside the plugin folder, so they never
+ship.
