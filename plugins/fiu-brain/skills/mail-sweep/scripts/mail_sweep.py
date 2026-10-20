@@ -78,7 +78,9 @@ def is_real_attachment(part):
     """A signature/footer image is not a real attachment; only count parts a sender
     actually meant to share as a file. Gmail marks pasted signature images as
     attachment-disposition with a generic name (image.png, 50KB banners included),
-    so images are judged by name always and by size when embedded via cid:."""
+    so images are judged by name always and by size when embedded: inline, or via
+    cid: without being an attachment, since Gmail gives every attachment a
+    Content-ID. The API's brain@ handover (IngestMailHandover) keeps the same rule."""
     filename = part.get_filename()
     if not filename:
         return False
@@ -86,7 +88,8 @@ def is_real_attachment(part):
         return True
     if SIGNATURE_FILENAME.match(decoded(filename)):
         return False
-    if not ("inline" in (part.get("Content-Disposition") or "").lower() or part.get("Content-ID")):
+    disposition = (part.get("Content-Disposition") or "").lower()
+    if not ("inline" in disposition or (part.get("Content-ID") and "attachment" not in disposition)):
         return True
     try:
         size = len(part.get_payload(decode=True) or b"")
