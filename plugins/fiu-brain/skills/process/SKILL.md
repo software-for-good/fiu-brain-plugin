@@ -29,7 +29,9 @@ A source that turns out personal or private yields nothing (extraction rules, st
 
 Apply the extraction rules per source, `sources` set to the raw's id on every atom.
 
-The compare step needs two `index` calls, and this skill sets only when they run: the company-wide one once per round, before the first candidate of the round is judged, and the party one once per source, once that source's parties are known. Step 8 carries their arguments. The context pack of the session start replaces neither: it is budgeted, and it predates the previous round's atoms.
+The compare step (extraction rules, step 8) reads the brain through `search`, once per candidate: the candidate's title and content as the query, with a blank line between them, `statuses` `["scoped", "company_wide", "proposed", "declined", "deprecated"]`, `limit` 10 and no labels. The brain ranks the query by meaning and by words together, so it returns the atom that says the same in other words and the atom that shares a name, whatever labels either carries, in full and nearest first. Those are the atoms to compare the candidate with. Search for every candidate, even when an earlier search seemed to cover it: each candidate has its own nearest atoms. Candidates that are not submitted yet are not in the brain; compare them with each other yourself.
+
+Search when the candidate is judged, so the atoms of earlier rounds, submitted by then, are part of what the brain returns. The context pack of the session start does not replace the search: it is budgeted, and it predates the previous round's atoms.
 
 Every candidate goes through step 8 before it enters the round's list. Newest first makes most transitions surface naturally, because the source that announced a change is processed before the sources living under the old regime; the covered check is the net for changes no surviving source announced. Count covered drops and keep one-line examples for the report, so over-firing shows early.
 

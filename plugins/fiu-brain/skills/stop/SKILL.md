@@ -15,7 +15,9 @@ Take the identity from the `whoami:` line at the end of the FIU Brain server ins
 
 ## 2. Extract
 
-Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. Before the compare step of the funnel, call `index` with no arguments and `index` with the labels of the parties this session touched, as the extraction rules describe: the context pack of the session start is budgeted and is not the brain of now.
+Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. In the compare step of the funnel, search the brain as below: the context pack of the session start is budgeted and is not the brain of now.
+
+The compare step (extraction rules, step 8) reads the brain through `search`, once per candidate: the candidate's title and content as the query, with a blank line between them, `statuses` `["scoped", "company_wide", "proposed", "declined", "deprecated"]`, `limit` 10 and no labels. The brain ranks the query by meaning and by words together, so it returns the atom that says the same in other words and the atom that shares a name, whatever labels either carries, in full and nearest first. Those are the atoms to compare the candidate with. Search for every candidate, even when an earlier search seemed to cover it: each candidate has its own nearest atoms. Candidates that are not submitted yet are not in the brain; compare them with each other yourself.
 
 Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 
