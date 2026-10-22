@@ -120,7 +120,7 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 ## 8. Compare with the brain
 
-Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the atoms the brain already holds in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Those are the company-wide atoms, the claims still awaiting a founder, and the scoped atoms on the parties your atoms carry; the flow that runs this funnel says how they reach you. An atom that is still proposed counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal.
+Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the atoms the brain already holds in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Those are the atoms nearest to the candidate, by meaning and by words, of every status: live, still awaiting a founder, declined and superseded; the flow that runs this funnel says how they reach you. An atom that is still proposed counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal. A declined atom is a claim a founder refused; never propose it again.
 
 Compare every candidate against those atoms. A title is the whole claim, so compare title by title, and read the body where the titles alone do not settle it. Never conclude "new" before every one of them has been read. There are four outcomes.
 

@@ -15,14 +15,9 @@ Take the identity from the `whoami:` line at the end of the FIU Brain server ins
 
 ## 2. Extract
 
-Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. Before the compare step of the funnel, read the brain as below, once, with the labels of the parties this session touched: the context pack of the session start is budgeted and is not the brain of now.
+Load `fiu:extraction-rules` and apply it to everything learned in this session, including what the human told you, not only what you produced. Everything you write is English. In the compare step of the funnel, search the brain as below: the context pack of the session start is budgeted and is not the brain of now.
 
-Two calls of `index` put the atoms of the compare step (extraction rules, step 8) in front of you.
-
-- `index` with no arguments: every company-wide atom, company truth and the claims still awaiting a founder, titles only. Hold the whole list, never a sample: a response that names an offset to continue at is not the whole list, so call again with that offset until no such line remains. The listing sections by status; an atom under `## proposed` is one of the claims still awaiting a founder.
-- `index` with statuses `["scoped"]` and the labels of the parties your atoms will carry (`websites/`, `partner/`, `prospect/`, `person/`): what the brain holds on those parties. The company-wide claims about them already stand in the first list, so this call asks for the scoped ones only. A label the brain does not hold yet stops the call and names itself; drop that label and call again, because a party the brain does not know has no atoms to compare against.
-
-The lists are titles, and a title is the whole claim; `get` fetches up to twenty bodies at once when the titles alone do not settle it. Never conclude "new" before both lists have been read to the end.
+The compare step (extraction rules, step 8) reads the brain through `search`, once per candidate: the candidate's title and content as the query, with a blank line between them, `statuses` `["scoped", "company_wide", "proposed", "declined", "deprecated"]`, `limit` 10 and no labels. The brain ranks the query by meaning and by words together, so it returns the atom that says the same in other words and the atom that shares a name, whatever labels either carries, in full and nearest first. Those are the atoms to compare the candidate with. Search for every candidate, even when an earlier search seemed to cover it: each candidate has its own nearest atoms. Candidates that are not submitted yet are not in the brain; compare them with each other yourself.
 
 Action items and absence claims are atoms too; the extraction rules define both shapes. Nothing else: your own summaries and reasoning are not knowledge.
 
