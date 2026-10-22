@@ -84,7 +84,7 @@ Split a claim until a smaller piece would stop reading on its own. One claim per
 
 ## 5. Label
 
-Call the `labels` tool before assigning any label; never guess a slug. Label what the claim is about, not everything it mentions; one to six labels is normal. If no label fits, you probably have no atom.
+Take every label from the vocabulary, which the `labels` tool lists; never guess a slug. Label what the claim is about, not everything it mentions; one to six labels is normal. If no label fits, you probably have no atom.
 
 | Cluster | Mode | What atoms with this label are for |
 |---|---|---|
@@ -120,12 +120,9 @@ This step is the safety net after the bar. A candidate that passed step 2 and is
 
 ## 8. Compare with the brain
 
-Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the existing titles in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Two calls of `index` put them there.
+Look before you judge. The server bounces only an exact duplicate, with a pointer; everything reworded is your judgement, and that judgement needs the atoms the brain already holds in front of you, not a memory of the context pack, which is budgeted and goes stale within a session. Those are the company-wide atoms, the claims still awaiting a founder, and the scoped atoms on the parties your atoms carry; the flow that runs this funnel says how they reach you. An atom that is still proposed counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal.
 
-- `index` with no arguments: every company-wide atom, company truth and the claims still awaiting a founder, titles only. Hold the whole list, never a sample: a response that names an offset to continue at is not the whole list, so call again with that offset until no such line remains. Once per round in `fiu:process`, once in `/stop`. The listing sections by status, and an atom under `## proposed` counts like a live one: the claim is waiting for a founder, not missing, and proposing it again makes a second proposal.
-- `index` with statuses `["scoped"]` and the labels of the parties your atoms will carry (`websites/`, `partner/`, `prospect/`, `person/`): what the brain holds on those parties. Once per source. The company-wide claims about them already stand in the first list, so this call asks for the scoped ones only. A label the brain does not hold yet stops the call and names itself; drop that label and call again, because a party the brain does not know has no atoms to compare against.
-
-Compare every candidate against both lists, title by title. A title is the whole claim, so the lists are the content; `get` fetches up to twenty bodies at once when the titles alone do not settle it. Never conclude "new" before both lists have been read to the end. There are four outcomes.
+Compare every candidate against those atoms. A title is the whole claim, so compare title by title, and read the body where the titles alone do not settle it. Never conclude "new" before every one of them has been read. There are four outcomes.
 
 - New: keep the candidate.
 - Duplicate: drop the candidate; when the source sharpens a proposed atom, correct that atom in place instead (below).

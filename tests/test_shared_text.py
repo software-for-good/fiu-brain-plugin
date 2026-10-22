@@ -16,6 +16,7 @@ SKILLS = ROOT / "plugins" / "fiu-brain" / "skills"
 COPIES = {
     SKILLS / "guardrails" / "SKILL.md": ["start"],
     ROOT / "shared" / "identity.md": ["start", "stop", "optimise", "work", "meeting", "process", "process-proposals"],
+    ROOT / "shared" / "reading-the-brain.md": ["process", "stop"],
 }
 
 

@@ -39,6 +39,9 @@ load time: the Claude app's chat and Cowork do not run the shell lines that Clau
 - `plugins/fiu-brain/skills/guardrails/SKILL.md`: its body, everything below the frontmatter, is copied into `start`.
 - `shared/identity.md`: the identity step, copied into `start`, `stop`, `optimise`, `work`, `meeting`, `process` and
   `process-proposals`.
+- `shared/reading-the-brain.md`: how a laptop session reads the brain for the compare step of the extraction rules,
+  copied into `process` and `stop`. The rules themselves name only what to compare with, so the server, which hands
+  the model the nearest atoms instead, loads the same rules.
 
 Edit the source, then copy the change into every skill that carries it. **Run the tests before every commit and
 push:**
