@@ -49,7 +49,7 @@ The source arrives in one of two ways. `/stop` gives you the session you are in,
 
 Test one candidate claim at a time. All three conditions must hold.
 
-- A colleague who reads the claim a month from now acts or decides differently for knowing it. Name that act in one concrete sentence: quote another price, plan the sampling in week 47, stop offering a monthly plan. "Is aware of", "has context on" or "understands the relationship" names no act, and the claim fails.
+- A colleague who reads the claim a month from now acts or decides differently for knowing it. Picture the moment it gets used: quoting a price, planning a sampling, writing to a client, choosing what to offer or how to approach a contact. Context and the relationship count when they shape such a moment; background or an out-of-date figure that shapes none fails.
 - The claim stands alone: someone who was not there can read it without the source.
 - The claim is settled: it happened, it was agreed, it was decided, or it is a client's dated plan. A draft, an open question, a status that changes next week or a claim that nobody owns is not knowledge yet. Such a candidate goes in the report, and the decision it leads to becomes the atom later.
 
