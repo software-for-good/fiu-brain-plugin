@@ -41,11 +41,11 @@ A candidate the split rule (extraction rules, step 3) breaks in two is shown pre
 
 Present the round as tables, never as prose or a plain list.
 
-- One table per source, with the source's citation above it. Columns: number, claim (the title), kind, labels, note (a doubt, or a source detail the human needs to judge). Claims about how the product works are not checked against the code here; that happens when a founder approves them.
+- One table per source, with the source's citation above it. Columns: number, claim (the title), kind, labels, note (a label you could argue either way, or a source detail the human needs to judge). Claims about how the product works are not checked against the code here; that happens when a founder approves them.
 - Number the claims continuously across all the source tables of the round, so the human can answer "2 drop, 17 prospect" without naming a source.
 - Sources that yielded nothing get one sentence together under the tables, with their citations and ids. A table with no rows says less than a sentence does.
 - One table for everything that did not make it. Columns: candidate, reason. The reason names the funnel step: failed the bar and which condition, filtered and which line, covered, duplicate, conflict. Nothing is dropped silently.
-- The note column is where your judgement surfaces. Use it for a label you could argue either way, for the atom you would cut first if the human cuts one, and for a claim that only just passed the bar. A round in which every note is empty is a round that hid its doubts.
+- The note column is where your judgement surfaces: a label you could argue either way, a source detail the human needs to judge. A claim that only just passes the bar does not pass (extraction rules, step 2); it goes in the table of what did not make it, where the human can still take it.
 - Close with two or three sentences under the drop table: the covered drops as a fraction of all candidates, so over-firing shows early, and anything the human must know before confirming.
 
 The human confirms, corrects or skips by number. Do not walk through source by source and do not summarise sources back at them; the claims are the summary.
