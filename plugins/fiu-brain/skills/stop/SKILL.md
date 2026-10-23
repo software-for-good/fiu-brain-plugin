@@ -26,7 +26,7 @@ Action items and absence claims are atoms too; the extraction rules define both 
 Three tables, most certain first, every row numbered so the human can react by number. Never prose, never a plain list.
 
 1. **Certain.** Columns: number, claim, kind, labels, clearance when not team. A single confirmation accepts them all.
-2. **Doubtful.** Columns: number, claim, option A, option B. The human picks A, B or skip. Never guess on the human's behalf.
+2. **Doubtful.** Only for a claim that passes the bar and can be written two ways (two readings, two scopes, two labels). Columns: number, claim, option A, option B. The human picks A, B or skip. Never guess on the human's behalf. A claim whose value you doubt is no doubtful row: step 2 of the extraction rules leaves it out.
 3. **Company-wide.** Columns: number, claim, labels. One line above the table says these enter as proposed, go to the founders and are not truth until approved.
 
 Nothing is sent before the human reacts. They may approve with a correction in one move ("akkoord, maar het was 1.200"): apply it and do not ask again. Record every correction verbatim for the report; that feedback is how the extraction rules get better.

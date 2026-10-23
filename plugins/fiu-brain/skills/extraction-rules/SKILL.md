@@ -49,7 +49,7 @@ The source arrives in one of two ways. `/stop` gives you the session you are in,
 
 Test one candidate claim at a time. All three conditions must hold.
 
-- A colleague who reads the claim a month from now acts or decides differently for knowing it.
+- A colleague who reads the claim a month from now acts or decides differently for knowing it. Picture the moment it gets used: quoting a price, planning a sampling, writing to a client, choosing what to offer or how to approach a contact. Context and the relationship count when they shape such a moment; background or an out-of-date figure that shapes none fails.
 - The claim stands alone: someone who was not there can read it without the source.
 - The claim is settled: it happened, it was agreed, it was decided, or it is a client's dated plan. A draft, an open question, a status that changes next week or a claim that nobody owns is not knowledge yet. Such a candidate goes in the report, and the decision it leads to becomes the atom later.
 
@@ -60,7 +60,7 @@ Whether a fact also stands in the docs, in the code, on the website or in a mail
 - Passes: "FIU decided on 27 August 2026 not to attend a partner's event, because winning and keeping creators needs no such event." A decision with its reason passes, whatever the decision is about.
 - Fails: "Zesty 2.0 is organised around arriving, staying and returning." That is a draft storyline for a session that has not been held.
 
-Typical yields are calibration, never a target: a support or account thread gives 1 to 2 atoms, a multi-month thread up to 4, an hour of meeting 1 to 4, a strategy document 1 to 5, a working session 0 to 2. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out: a missing atom costs one question later, and a wrong atom gets repeated as truth.
+Yields have a ceiling: a support or account thread gives at most 2 atoms, a multi-month thread at most 4, an hour of meeting at most 4, a strategy document at most 5, a working session at most 2. When more candidates pass, keep the ones a colleague would miss most and leave the rest out. Zero is a normal outcome; say so and move on. Distrust repetition more than a count. When in doubt, leave the claim out, and a claim that only just passes is in doubt: a missing atom costs one question later, and a wrong atom gets repeated as truth.
 
 ## 3. Split
 
@@ -112,7 +112,8 @@ One guard: a client label is never a vehicle for a general claim. "Lemone hit th
 
 This step is the safety net after the bar. A candidate that passed step 2 and is not caught here stays.
 
-- Always out: a current value the database owns; a dashboard figure that nobody used; the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
+- Always out: a current value the database owns; a performance figure (next line); the logistics of a conversation (meeting slots, availability, who calls whom); speculation with no owner; the argument of an article or document you were handed; your own reasoning or a summary of the session.
+- Performance figures: a brand's preference, reach or share, or a count of baskets, views or recipes at a moment, stays out also when FIU reported it to a client, because the next report outdates it and the dashboards own it. What was decided or agreed because of a figure is an atom, and so is a figure FIU uses as a standing argument towards brands.
 - `person/`: nothing about health, nothing learned outside the work relationship, no judgments about the person. What a contact volunteered at work and would expect a good account manager to remember stays.
 - `websites/`, `partner/`, `prospect/`: no scheduling of the conversation. A client's dated plan is not scheduling and stays.
 - `service/`: a question that a colleague, a partner or a client actually asked, with its answer, stays; a question asked is the ticket in. The answer as it was given is the atom, hedges included, and the hedge is stated in the body ("FIU could not say whether ..."). Documentation copied without anyone having asked is out.
