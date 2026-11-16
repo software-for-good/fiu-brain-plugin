@@ -1,0 +1,56 @@
+---
+description: Claude Code only, and does nothing anywhere else. Makes FIU Brain sessions fast on this machine: writes the Claude Code permission rules for the brain tools this account may use, so no call waits for a safety check. Run once after installing the plugin, and again after a plugin update adds tools or skills.
+disable-model-invocation: true
+compatibility: Claude Code only. This skill writes permission rules into the person's Claude Code settings file; Cowork and the Claude apps have no such file and nothing to write. No client enforces this field, so the skill also stops on its own in its first step.
+---
+
+# /optimise
+
+**Claude Code only.** Before anything else: if this session is not Claude Code, say in one line that this skill only has work to do in Claude Code, and stop. The rules it writes live in the Claude Code settings file, which Cowork and the Claude apps do not have. Nothing below applies there.
+
+Claude Code runs every tool call that no permission rule covers past a safety judge before it executes. For the brain that costs one to three seconds per call and decides nothing: the FIU Brain server checks the token's role and abilities on every call itself. This skill writes the permission rules once, for the tools this account may use, and nothing else.
+
+## 1. Who
+
+Take the identity from the `whoami:` line at the end of the FIU Brain server instructions: name, slug, role, clearance, `can_write` and `can_approve`. Not every client passes those instructions on, so when the line is not in your context, call the brain's `whoami` tool once: it returns the same payload. If that call fails too, the connector is not connected (Settings, Connectors, or `claude mcp add` with a personal token): say so and stop.
+
+## 2. The rules this account earns
+
+Every account with brain access:
+
+- `mcp__fiu-brain__whoami`, `mcp__fiu-brain__labels`, `mcp__fiu-brain__context_pack`, `mcp__fiu-brain__search`, `mcp__fiu-brain__index`, `mcp__fiu-brain__get`, `mcp__fiu-brain__list_raws`, `mcp__fiu-brain__generate_image`, `mcp__fiu-brain__datasets`, `mcp__fiu-brain__dataset`
+- `Bash(python3 *mail_sweep.py *)` and `Bash(python3 *transcript_sweep.py *)`, the two local sweeps
+
+When `can_write` is true, add `mcp__fiu-brain__submit_atoms`, `mcp__fiu-brain__submit_raw`, `mcp__fiu-brain__update_atom`.
+When `can_approve` is true, add `mcp__fiu-brain__approve`, `mcp__fiu-brain__decline`.
+When the role is `founder` and `can_write` is true, add `mcp__fiu-brain__mark_raw_processed`, `mcp__fiu-brain__delete_raw`.
+
+Nothing outside this list, whatever the human asks in the same breath: other tools get their rules elsewhere.
+
+## 3. What is already there
+
+Read `~/.claude/settings.json` (on Windows `%USERPROFILE%\.claude\settings.json`). It may not exist, or carry no `permissions` key; both mean an empty list. The missing rules are the ones from step 2 that `permissions.allow` does not contain verbatim. When nothing is missing, say so in one line and stop.
+
+## 4. Ask
+
+Show the missing rules as a table, one row per rule with the tool or script it covers, and ask one yes-or-no question. Nothing is written without the yes.
+
+## 5. Write
+
+Merge with a script, never by editing the JSON by hand: a stray comma breaks every future session. Run this, the missing rules substituted, from a shell:
+
+```
+python3 - <<'PY'
+import json, os
+path = os.path.expanduser('~/.claude/settings.json')
+settings = json.load(open(path)) if os.path.exists(path) else {}
+allow = settings.setdefault('permissions', {}).setdefault('allow', [])
+for rule in [RULES]:
+    if rule not in allow:
+        allow.append(rule)
+json.dump(settings, open(path, 'w'), indent=2)
+open(path, 'a').write('\n')
+PY
+```
+
+Then show the resulting `permissions.allow` and say that the rules apply from the next session at the latest. Rules are per person and per machine: on another machine, run `/optimise` again.

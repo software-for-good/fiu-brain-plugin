@@ -1,0 +1,15 @@
+{
+  "name": "fiu-brain",
+  "description": "The skills of the FIU Brain, kept in sync by Cowork and Claude Code.",
+  "owner": {
+    "name": "Food Influencers United"
+  },
+  "plugins": [
+    {
+      "name": "fiu",
+      "source": "./plugins/fiu-brain",
+      "description": "The FIU Brain skills: session start/stop, optimise, extraction rules, guardrails, the work folder, the two sweeps and the four paths after start.",
+      "version": "2.18.0"
+    }
+  ]
+}

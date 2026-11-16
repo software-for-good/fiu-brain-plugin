@@ -1,0 +1,56 @@
+# FIU Brain plugin
+
+The skills of the FIU Brain. This repository is the single place they live; a merged pull request reaches
+every session because both clients keep the plugin in sync:
+
+- Cowork: Plugins → Add marketplace → `software-for-good/fiu-brain-plugin`, install `fiu`, turn auto-sync on.
+- Claude Code: `/plugin marketplace add software-for-good/fiu-brain-plugin`, `/plugin install fiu@fiu-brain`,
+  then enable auto-update for the marketplace under `/plugin` → Marketplaces.
+
+One plugin for everyone, two session commands: `/fiu:start` opens every session and `/fiu:stop` closes it.
+`/fiu:start` is a router: it takes the identity the server hands over at connect (the `whoami:` line of its
+instructions, or the `whoami` tool where a client does not pass those instructions on), establishes the goal (from its
+argument, or with one fixed question that offers only the goals fitting the role) and hands over to the skill for that
+path: `process` and `process-proposals` for founders, `meeting` for preparing a client meeting, `work` for questions
+and everything else. `/start` carries a copy of the `guardrails` in its own text, so they govern the session from its
+first words, the question of step 2 included, and every path inherits them;
+`work-folder` (where files belong, when a project folder is made) is loaded only by a path that is about to create a
+file. All of those carry `user-invocable: false`: hidden from the command menu and not runnable by hand, loadable only
+by the AI. This is convenience, not security: the server checks each token's role and abilities on every tool call,
+whatever the skills say.
+
+The two sweeps, `/fiu:mail-sweep` and `/fiu:transcript-sweep`, stay direct commands: they run once per person,
+locally, and never touch the brain.
+
+`/fiu:optimise` is Claude Code housekeeping, once per person and machine: it writes the permission rules for the
+brain tools the account may use, so no call waits for Claude Code's safety judge (one to three seconds per call
+that the server's own role and ability checks make redundant). Run it again after a plugin update adds tools.
+
+The plugin contains no hooks, executables, agents or MCP server configuration; the skills only call the
+FIU Brain connector the person already has (a custom connector or `claude mcp add` with a personal bearer
+token from `php artisan brain:token`). Nothing sensitive is stored here. This repository is public, so the examples
+in the skills name invented clients, partners and contacts, never real ones.
+
+## Shared text
+
+Some text has to be identical in several skills, and each skill carries its own copy. A skill cannot pull it in at
+load time: the Claude app's chat and Cowork do not run the shell lines that Claude Code expands inside a skill, so a
+`!` line there reaches the model as a bare command. The sources:
+
+- `plugins/fiu-brain/skills/guardrails/SKILL.md`: its body, everything below the frontmatter, is copied into `start`.
+- `shared/identity.md`: the identity step, copied into `start`, `stop`, `optimise`, `work`, `meeting`, `process` and
+  `process-proposals`.
+- `shared/reading-the-brain.md`: how a laptop session searches the brain for the compare step of the extraction
+  rules, copied into `process` and `stop`. The server's processing of a mail runs the same search per candidate (API
+  decision 46), so a laptop and the server compare against the same atoms and load the same rules.
+
+Edit the source, then copy the change into every skill that carries it. **Run the tests before every commit and
+push:**
+
+```
+python3 -m unittest discover -s tests
+```
+
+`tests/test_shared_text.py` fails, with a diff, until every copy matches its source word for word. The list of
+sources and copies is at the top of that file. `shared/` and `tests/` sit outside the plugin folder, so they never
+ship.
